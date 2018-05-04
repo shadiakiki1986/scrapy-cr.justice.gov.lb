@@ -1,7 +1,7 @@
 import betamax
 import requests
 
-CASSETTE_LIBRARY_DIR = 'examples/cassettes/'
+CASSETTE_LIBRARY_DIR = 'tests/fixtures/cassettes/'
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
         session, cassette_library_dir=CASSETTE_LIBRARY_DIR
     )
 
-    with recorder.use_cassette('our-first-recorded-session'):
+    with recorder.use_cassette('after_search'):
         session.get('https://httpbin.org/get')
 
 
