@@ -1,11 +1,12 @@
 import scrapy
+import pandas as pd
 
-class ScrapyCrJusticeGovLbSpider(scrapy.Spider):
+class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   """
   curl --data "FindBox=5000780" http://cr.justice.gov.lb/search/res_list.aspx
   """
 
-  name = "quotes"
+  name = "cr_justice_gov_lb_base"
   start_urls = [
     'http://cr.justice.gov.lb/search/res_list.aspx',
   ]
@@ -15,25 +16,30 @@ class ScrapyCrJusticeGovLbSpider(scrapy.Spider):
     missing_cols = set(['register_number', 'register_place']) - set(df_in.columns)
     if len(missing_cols)>0:
       raise ValueError("Missing columns: %s"%", ".join(missing_cols))
+    print(df_in)
     self.df_in = df_in
 
   def parse(self, response):
-    qs_set = ObligorParty.objects.filter(obligor_type='CO', register_number__isnull=False).all()
-    # FIXME
-    qs_set = qs_set[:3]
-    for qs_single in qs_set:
-      self.logger.info("searching for %s"%qs_single.register_number)
+    for index, row in self.df_in.iterrows():
+      print(row['register_number'], row['register_place'])
+      self.logger.info("searching for %s"%row['register_number'])
       request = scrapy.FormRequest.from_response(
         response,
-        formdata={'FindBox': qs_single.register_number},
+        formdata={'FindBox': str(row['register_number'])},
         callback=self.after_search
       )
-      request.meta['register_number'] = qs_single.register_number
-      request.meta['register_place'] = qs_single.register_place
+      self.logger.info('parse .. request =')
+      request.meta['register_number'] = row['register_number']
+      request.meta['register_place'] = row['register_place']
+      self.logger.info('yield parse')
       yield request
 
 
   def after_search(self, response):
+    self.logger.info('start after search')
+    with open('after_search.html', 'w') as fn:
+      fn.write(response.body.decode("utf-8"))
+
     n_res = response.xpath('//span[@id="DataList1_rec_countLabel_0"]/text()').extract_first()
     n_res = int(n_res)
     self.logger.info("for {number: %s, place: %s} got %s results"%(response.meta['register_number'], response.meta['register_place'], n_res))
@@ -41,7 +47,7 @@ class ScrapyCrJusticeGovLbSpider(scrapy.Spider):
       raise ValueError("Not found. Aborting")
 
     if n_res >  1:
-      details_url = response.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line2" and contains(string(), "%s")]/preceding-sibling::div[last()]/a/@href'%(response.meta['register_place']))
+      details_url = response.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line2" and contains(string(), "%s")]/preceding-sibling::div[@class="res_line1"]/a/@href'%(response.meta['register_place']))
       if len(details_url) > 1:
         raise ValueError("Need to filter further. Aborting")
       if len(details_url) == 0:
@@ -73,3 +79,14 @@ class ScrapyCrJusticeGovLbSpider(scrapy.Spider):
         'obligor_alien': q2,
       }
  
+
+class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
+  """
+  Instead of a pd.DataFrame in the constructor, read a csv file with
+  fields "register_number, register_place" which can be read with
+  pd.read_csv
+  """
+  name = "cr_justice_gov_lb_csv"
+  def __init__(self, csv_in:pd.DataFrame, *args, **kwargs):
+    df_in = pd.read_csv(csv_in)
+    super().__init__(df_in=df_in, *args, **kwargs)

@@ -18,24 +18,22 @@ class ScrapyCrJusticeGovLbPipeline(object):
 
     def process_item(self, item, spider):
       item2 = dict(item)
-      obligor_party = ObligorParty.objects.get(obligor_type='CO', register_number=item['register_number'])
-      obligor_alien = ObligorAlien.objects.filter(first_name=item2['obligor_alien']).first()
-      if obligor_alien is not None:
-        logger.info("Obligor party: %s. Found obligor alien: %s"%(obligor_party, obligor_alien))
-      else:
-        logger.info("Obligor party: %s. Should create obligor alien: %s"%(obligor_party, item2['obligor_alien']))
-        self.df = self.df.append(item2, ignore_index=True)
-  
+      self.df = self.df.append(item2, ignore_index=True)
       return item
   
     def close_spider(self, spider):
+      if self.df.shape[0]==0:
+        logging.info("No results to show")
+        return
+
       # drop duplicates
       self.df = self.df[~self.df.duplicated()]
   
       # transliterate
-      translate_client = translate.Client()
-      get_trans = lambda text: translate_client.translate(text, target_language='en')['translatedText']
-      self.df['name_en'] = self.df['obligor_alien'].apply(get_trans)
+      if os.getenv('GOOGLE_APPLICATION_CREDENTIALS', None) is not None:
+        translate_client = translate.Client()
+        get_trans = lambda text: translate_client.translate(text, target_language='en')['translatedText']
+        self.df['name_en'] = self.df['obligor_alien'].apply(get_trans)
   
       # save to file
       import tempfile
