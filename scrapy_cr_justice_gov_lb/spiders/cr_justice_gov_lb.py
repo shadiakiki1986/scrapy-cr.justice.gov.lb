@@ -7,22 +7,19 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   """
 
   name = "cr_justice_gov_lb_base"
-  start_urls = [
-    'http://cr.justice.gov.lb/search/res_list.aspx',
-  ]
+  #start_urls = []
+  url = 'http://cr.justice.gov.lb/search/res_list.aspx'
 
   def __init__(self, df_in:pd.DataFrame, *args, **kwargs):
-    super().__init__(*args, **kwargs)
     missing_cols = set(['register_number', 'register_place']) - set(df_in.columns)
     if len(missing_cols)>0:
       raise ValueError("Missing columns: %s"%", ".join(missing_cols))
-    print(df_in)
     self.df_in = df_in
+    return super().__init__(*args, **kwargs)
 
   def parse(self, response):
     for index, row in self.df_in.iterrows():
-      print(row['register_number'], row['register_place'])
-      self.logger.info("searching for %s"%row['register_number'])
+      self.logger.info("searching for %s - %s"%(row['register_number'], row['register_place']))
       request = scrapy.FormRequest.from_response(
         response,
         formdata={'FindBox': str(row['register_number'])},
@@ -37,8 +34,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
   def after_search(self, response):
     self.logger.info('start after search')
-    with open('after_search.html', 'w') as fn:
-      fn.write(response.body.decode("utf-8"))
+    #with open('after_search.html', 'w') as fn:
+    #  fn.write(response.body.decode("utf-8"))
 
     n_res = response.xpath('//span[@id="DataList1_rec_countLabel_0"]/text()').extract_first()
     n_res = int(n_res)
