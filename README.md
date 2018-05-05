@@ -18,11 +18,6 @@ Fetching shareholders of register numbers/places in a csv file
 scrapy crawl cr_justice_gov_lb_csv -a csv_in=scrapy_cr_justice_gov_lb/fixtures/df_in_sample.csv
 ```
 
-Updating test fixtures
-```
-python -m scrapy_cr_justice_gov_lb.tests.update_fixtures
-```
-
 Run test
 ```
 python -m scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
