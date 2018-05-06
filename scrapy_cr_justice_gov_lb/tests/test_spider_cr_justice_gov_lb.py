@@ -57,7 +57,7 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     # print(response_1.content.decode('utf-8'))
     return response_1, request_0
 
-  def test_2_after_search(self):
+  def get_request_2(self):
     response_1, request_0 = self.get_response_1()
     response_1b = HtmlResponse(
         url=response_1.url,
@@ -68,13 +68,17 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     )
     
     # pass scrapy response to spider function to test    
-    response_2 = list(self.spider.after_search(response_1b))
+    request_2 = list(self.spider.after_search(response_1b))
+    return request_2, response_1, request_0
+
+  def test_2_after_search(self):
+    request_2, response_1, request_0 = self.get_request_2()
     
-    self.assertEqual(1, len(response_2))
-    response_2 = response_2[0]
-    self.assertEqual('GET', response_2.method)
+    self.assertEqual(1, len(request_2))
+    request_2 = request_2[0]
+    self.assertEqual('GET', request_2.method)
     # print(response_2.__dict__)
-    self.assertTrue('id=2000004239' in str(response_2.url))
+    self.assertTrue('id=2000004239' in str(request_2.url))
 
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
     request_0.meta['register_place'] = 'ج'
@@ -86,4 +90,4 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
         request = request_0
     )
     with self.assertRaises(ValueError):
-        response_2 = list(self.spider.after_search(response_1b)) # hxs
+        request_2 = list(self.spider.after_search(response_1b)) # hxs
