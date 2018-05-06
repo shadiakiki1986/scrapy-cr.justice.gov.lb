@@ -29,6 +29,14 @@ import pandas as pd
 
 from scrapy.http import HtmlResponse
 
+def convert_response_from_requests_scrapy(response_1, request_1):
+    return HtmlResponse(
+        url=response_1.url,
+        status=response_1.status_code,
+        headers=response_1.headers,
+        body=response_1.content,
+        request = request_1
+    )
 
 class TestSpiderCrJusticeGovLb(BetamaxTestCase):
   def setUp(self):
@@ -59,13 +67,7 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
 
   def get_request_2(self):
     response_1, request_1 = self.get_response_1()
-    response_1b = HtmlResponse(
-        url=response_1.url,
-        status=response_1.status_code,
-        headers=response_1.headers,
-        body=response_1.content,
-        request = request_1
-    )
+    response_1b = convert_response_from_requests_scrapy(response_1, request_1)
     
     # pass scrapy response to spider function to test    
     request_2 = list(self.spider.after_search(response_1b))
@@ -82,14 +84,24 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
 
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
     request_1.meta['register_place'] = 'ج'
-    response_1b = HtmlResponse(
-        url=response_1.url,
-        status=response_1.status_code,
-        headers=response_1.headers,
-        body=response_1.content,
-        request = request_1
-    )
+    response_1b = convert_response_from_requests_scrapy(response_1, request_1)
     with self.assertRaises(ValueError):
         request_2 = list(self.spider.after_search(response_1b)) # hxs
 
- 
+  def test_3_after_result(self):
+    request_2, response_1, request_1 = self.get_request_2()
+    request_2 = request_2[0]
+    response_2 = self.session.get(request_2.url)
+    response_2b = convert_response_from_requests_scrapy(response_2, request_2)
+    
+    obligor_alien_set = list(self.spider.after_result(response_2b))
+    self.assertEqual(20, len(obligor_alien_set))
+    obligor_alien_set = pd.DataFrame(obligor_alien_set)
+    # print(obligor_alien_set)
+    df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_sample.csv')
+    # uncomment the below to update the fixture
+    # obligor_alien_set.to_csv(df_out, index=False)
+    
+    expected = pd.read_csv(df_out)
+    # print(expected)
+    pd.testing.assert_frame_equal(obligor_alien_set, expected)
