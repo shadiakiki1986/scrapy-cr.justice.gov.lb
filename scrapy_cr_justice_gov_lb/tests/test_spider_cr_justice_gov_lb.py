@@ -36,43 +36,43 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.spider = ScrapyCrJusticeGovLbSpiderCsv(df_in)
     super().setUp()
 
-  def get_request_0(self):
+  def get_request_1(self):
     response = self.session.get(self.spider.url)
     request = list(self.spider.parse(response))
     return request
     
   def test_1_parse(self):
-    request_0 = self.get_request_0()
-    self.assertEqual(1, len(request_0))
-    request_0 = request_0[0]
-    self.assertEqual('POST', request_0.method)
-    self.assertTrue('FindBox=66942' in str(request_0.body))
+    request_1 = self.get_request_1()
+    self.assertEqual(1, len(request_1))
+    request_1 = request_1[0]
+    self.assertEqual('POST', request_1.method)
+    self.assertTrue('FindBox=66942' in str(request_1.body))
 
   def get_response_1(self):
-    request_0 = self.get_request_0()[0]
+    request_1 = self.get_request_1()[0]
 
     # make a plain python.requests post and wrap it in scrapy response
-    data = str(request_0.body).split('&')[-1].split('=')[-1].replace("'","")
-    response_1 = self.session.post(request_0.url, data={'FindBox': data})
+    data = str(request_1.body).split('&')[-1].split('=')[-1].replace("'","")
+    response_1 = self.session.post(request_1.url, data={'FindBox': data})
     # print(response_1.content.decode('utf-8'))
-    return response_1, request_0
+    return response_1, request_1
 
   def get_request_2(self):
-    response_1, request_0 = self.get_response_1()
+    response_1, request_1 = self.get_response_1()
     response_1b = HtmlResponse(
         url=response_1.url,
         status=response_1.status_code,
         headers=response_1.headers,
         body=response_1.content,
-        request = request_0
+        request = request_1
     )
     
     # pass scrapy response to spider function to test    
     request_2 = list(self.spider.after_search(response_1b))
-    return request_2, response_1, request_0
+    return request_2, response_1, request_1
 
   def test_2_after_search(self):
-    request_2, response_1, request_0 = self.get_request_2()
+    request_2, response_1, request_1 = self.get_request_2()
     
     self.assertEqual(1, len(request_2))
     request_2 = request_2[0]
@@ -81,13 +81,15 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.assertTrue('id=2000004239' in str(request_2.url))
 
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
-    request_0.meta['register_place'] = 'ج'
+    request_1.meta['register_place'] = 'ج'
     response_1b = HtmlResponse(
         url=response_1.url,
         status=response_1.status_code,
         headers=response_1.headers,
         body=response_1.content,
-        request = request_0
+        request = request_1
     )
     with self.assertRaises(ValueError):
         request_2 = list(self.spider.after_search(response_1b)) # hxs
+
+ 
