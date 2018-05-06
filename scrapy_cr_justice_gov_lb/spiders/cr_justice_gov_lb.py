@@ -37,15 +37,16 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     #with open('after_search.html', 'w') as fn:
     #  fn.write(response.body.decode("utf-8"))
 
-    n_res = response.xpath('//span[@id="DataList1_rec_countLabel_0"]/text()').extract_first()
+    n_res = response.selector.xpath('//span[@id="DataList1_rec_countLabel_0"]/text()').extract_first()
     n_res = int(n_res)
     self.logger.info("for {number: %s, place: %s} got %s results"%(response.meta['register_number'], response.meta['register_place'], n_res))
     if n_res == 0:
       raise ValueError("Not found. Aborting")
 
     if n_res >  1:
-      details_url = response.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line2" and contains(string(), "%s")]/preceding-sibling::div[@class="res_line1"]/a/@href'%(response.meta['register_place']))
+      details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line2" and contains(string(), "%s")]/preceding-sibling::div[@class="res_line1"][1]/a/@href'%(response.meta['register_place']))
       if len(details_url) > 1:
+        # print(details_url)
         raise ValueError("Need to filter further. Aborting")
       if len(details_url) == 0:
         raise ValueError("Filter failed. Aborting")
@@ -53,7 +54,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       details_url = details_url.extract_first()
 
     if n_res == 1:
-      details_url = response.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line1"]/a/@href').extract_first()
+      details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line1"]/a/@href').extract_first()
 
     details_url =  'http://cr.justice.gov.lb/search/' + details_url
     self.logger.info("details at %s"%(details_url))

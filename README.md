@@ -20,5 +20,5 @@ scrapy crawl cr_justice_gov_lb_csv -a csv_in=scrapy_cr_justice_gov_lb/fixtures/d
 
 Run test
 ```
-python -m scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
+python -m unittest scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
 ```
