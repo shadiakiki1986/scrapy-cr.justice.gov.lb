@@ -36,38 +36,40 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.spider = ScrapyCrJusticeGovLbSpiderCsv(df_in)
     super().setUp()
 
-  def test_1_parse(self):
-    response = self.session.get(self.spider.url)
-    response = list(self.spider.parse(response))
-    self.assertEqual(1, len(response))
-    response = response[0]
-    self.assertEqual('POST', response.method)
-    self.assertTrue('FindBox=66942' in str(response.body))
-
-  def test_2_after_search(self):
+  def get_request_0(self):
     response = self.session.get(self.spider.url)
     request = list(self.spider.parse(response))
-    request = request[0]
-    # print(request.meta)
-    # print(request.__dict__)
-    # print(request.url)
-    # print(request)
+    return request
+    
+  def test_1_parse(self):
+    request_0 = self.get_request_0()
+    self.assertEqual(1, len(request_0))
+    request_0 = request_0[0]
+    self.assertEqual('POST', request_0.method)
+    self.assertTrue('FindBox=66942' in str(request_0.body))
+
+  def get_response_1(self):
+    request_0 = self.get_request_0()[0]
 
     # make a plain python.requests post and wrap it in scrapy response
-    data = str(request.body).split('&')[-1].split('=')[-1].replace("'","")
-    response_1 = self.session.post(request.url, data={'FindBox': data})
+    data = str(request_0.body).split('&')[-1].split('=')[-1].replace("'","")
+    response_1 = self.session.post(request_0.url, data={'FindBox': data})
     # print(response_1.content.decode('utf-8'))
-    
+    return response_1, request_0
+
+  def test_2_after_search(self):
+    response_1, request_0 = self.get_response_1()
     response_1b = HtmlResponse(
         url=response_1.url,
         status=response_1.status_code,
         headers=response_1.headers,
         body=response_1.content,
-        request = request
+        request = request_0
     )
     
     # pass scrapy response to spider function to test    
-    response_2 = list(self.spider.after_search(response_1b)) # hxs
+    response_2 = list(self.spider.after_search(response_1b))
+    
     self.assertEqual(1, len(response_2))
     response_2 = response_2[0]
     self.assertEqual('GET', response_2.method)
@@ -75,13 +77,13 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.assertTrue('id=2000004239' in str(response_2.url))
 
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
-    request.meta['register_place'] = 'ج'
+    request_0.meta['register_place'] = 'ج'
     response_1b = HtmlResponse(
         url=response_1.url,
         status=response_1.status_code,
         headers=response_1.headers,
         body=response_1.content,
-        request = request
+        request = request_0
     )
     with self.assertRaises(ValueError):
         response_2 = list(self.spider.after_search(response_1b)) # hxs
