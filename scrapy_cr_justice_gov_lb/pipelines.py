@@ -43,4 +43,4 @@ class ScrapyCrJusticeGovLbPipeline(object):
       temp_name = "scrape_%s_%s.csv"%(suffix_1, suffix_2)
       fn = os.path.join(default_tmp_dir, temp_name)
       self.df.to_csv(fn)
-      logger.info("Save to %s"%fn)
+      print("Save to %s"%fn)
