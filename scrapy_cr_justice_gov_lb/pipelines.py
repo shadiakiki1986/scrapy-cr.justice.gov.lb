@@ -10,13 +10,19 @@ import pandas as pd
 import datetime as dt
 import os
 from google.cloud import translate
+from bs4 import BeautifulSoup
 
 def wrap_translate(translate_client, text):
     # trick to transliterate names such as "kamel" so that they don't become "full"
     # Ref: https://stackoverflow.com/questions/50209588/transliterate-arabic-names-to-latin-characters/50210091#50210091
     text = '%s "%s"'%("أَنا إِسمي", text)
     res = translate_client.translate(text, target_language='en')['translatedText']
-    res = res.split('&quot;')[1]
+    res = res.lower()
+    res = res.replace('my name is ',''
+                     ).replace('i am my name ',''
+                              ).replace('i am named ',''
+                                       ).replace('&quot;','')
+    res = BeautifulSoup(res, "lxml").string
     return res
 
 class ScrapyCrJusticeGovLbPipeline(object):
@@ -56,5 +62,5 @@ class ScrapyCrJusticeGovLbPipeline(object):
       suffix_1 = dt.datetime.strftime(dt.datetime.now(), "%Y%m%d_%H%M%S")
       temp_name = "scrape_%s_%s.csv"%(suffix_1, suffix_2)
       fn = os.path.join(default_tmp_dir, temp_name)
-      self.df.to_csv(fn)
+      self.df.to_csv(fn, index=False)
       print("Save to %s"%fn)
