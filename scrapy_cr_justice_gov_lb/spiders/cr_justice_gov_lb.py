@@ -225,11 +225,13 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       q2 = quote.xpath('td[1]/span/text()').extract()
       if len(q2)==0: continue
       q2=q2[0]
+      q3 = quote.xpath('td[3]/span/text()').extract_first()
       yield {
         'register_number': response.meta['register_number'],
         'register_place':  response.meta['register_place'],
         'details_url':  response.meta['details_url'],
         'obligor_alien':   q2,
+        'relationship': q3,
       }
  
 

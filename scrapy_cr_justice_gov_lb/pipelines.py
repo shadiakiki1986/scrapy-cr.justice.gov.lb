@@ -11,6 +11,14 @@ import datetime as dt
 import os
 from google.cloud import translate
 
+def wrap_translate(translate_client, text):
+    # trick to transliterate names such as "kamel" so that they don't become "full"
+    # Ref: https://stackoverflow.com/questions/50209588/transliterate-arabic-names-to-latin-characters/50210091#50210091
+    text = '%s "%s"'%("أَنا إِسمي", text)
+    res = translate_client.translate(text, target_language='en')['translatedText']
+    res = res.split('&quot;')[1]
+    return res
+
 class ScrapyCrJusticeGovLbPipeline(object):
     def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
@@ -35,7 +43,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
       # transliterate
       if os.getenv('GOOGLE_APPLICATION_CREDENTIALS', None) is not None:
         translate_client = translate.Client()
-        get_trans = lambda text: translate_client.translate(text, target_language='en')['translatedText']
+        get_trans = lambda text: wrap_translate(translate_client, text)
         self.df['name_en'] = self.df['obligor_alien'].apply(get_trans)
         
       # print
