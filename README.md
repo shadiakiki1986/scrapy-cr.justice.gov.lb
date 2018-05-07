@@ -23,6 +23,11 @@ To benefit from translation with Google Cloud Platform, set the corresponding en
 ```
 GOOGLE_APPLICATION_CREDENTIALS=abc123 scrapy crawl ...
 ```
+or
+```
+export GOOGLE_APPLICATION_CREDENTIALS=abc123
+scrapy crawl ...
+```
 
 Run test
 ```

@@ -42,14 +42,20 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
   def setUp(self):
     df_in = os.path.join(BASE_DIR, 'tests/fixtures/df_in_sample.csv')
     self.spider = ScrapyCrJusticeGovLbSpiderCsv(df_in)
+    self.df_in_original = self.spider.df_in.copy()
     super().setUp()
 
   def get_request_1(self):
     response = self.session.get(self.spider.url)
     request = list(self.spider.parse(response))
     return request
+
+  def filter_df_in(self, comment):
+    self.spider.df_in = self.df_in_original[self.df_in_original['comment']==comment].copy()
+    self.assertEqual(1, self.spider.df_in.shape[0])
     
   def test_1_parse(self):
+    self.filter_df_in('single page/multiple results')
     request_1 = self.get_request_1()
     self.assertEqual(1, len(request_1))
     request_1 = request_1[0]
@@ -73,7 +79,8 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     request_2 = list(self.spider.after_search(response_1b))
     return request_2, response_1, request_1
 
-  def test_2_after_search(self):
+  def test_2a_after_search_pass(self):
+    self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
     
     self.assertEqual(1, len(request_2))
@@ -82,6 +89,10 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     # print(response_2.__dict__)
     self.assertTrue('id=2000004239' in str(request_2.url))
 
+  def test_2b_after_search_fail(self):
+    self.filter_df_in('single page/multiple results')
+    request_2, response_1, request_1 = self.get_request_2()
+
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
     request_1.meta['register_place'] = 'ج'
     response_1b = convert_response_from_requests_scrapy(response_1, request_1)
@@ -89,6 +100,7 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
         request_2 = list(self.spider.after_search(response_1b)) # hxs
 
   def test_3_after_result(self):
+    self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
     request_2 = request_2[0]
     response_2 = self.session.get(request_2.url)
@@ -98,7 +110,7 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.assertEqual(20, len(obligor_alien_set))
     obligor_alien_set = pd.DataFrame(obligor_alien_set)
     # print(obligor_alien_set)
-    df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_sample.csv')
+    df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_singlepage_multiresult.csv')
     # uncomment the below to update the fixture
     # obligor_alien_set.to_csv(df_out, index=False)
     
