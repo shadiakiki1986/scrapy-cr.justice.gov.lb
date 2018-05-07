@@ -103,5 +103,6 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     # obligor_alien_set.to_csv(df_out, index=False)
     
     expected = pd.read_csv(df_out)
-    # print(expected)
-    pd.testing.assert_frame_equal(obligor_alien_set, expected)
+    #print(expected.columns, obligor_alien_set.columns)
+    #print(expected)
+    pd.testing.assert_frame_equal(obligor_alien_set[expected.columns], expected)

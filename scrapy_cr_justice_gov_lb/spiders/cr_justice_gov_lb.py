@@ -30,8 +30,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   def __init__(self, df_in:pd.DataFrame, *args, **kwargs):
     validate_df_in(df_in)
     df_in = preprocess_df_in(df_in)
-    print("input df")
-    print(df_in)
+    # print("input df")
+    # print(df_in)
     self.df_in = df_in
     return super().__init__(*args, **kwargs)
 
@@ -72,15 +72,14 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     n_res = int(n_res)
     self.logger.info("for {number: %s, place: %s} got %s results"%(response.meta['register_number'], response.meta['register_place'], n_res))
     if n_res == 0:
-      print("Not found. Aborting")
-      return
+      raise ValueError("Not found. Aborting")
 
     if n_res == 1:
       details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line1"]/a/@href').extract_first()
       return self.process_details_url(details_url, response)
 
     # filter for exact match .. note that cr.justice.gov.lb search for "123" would include results with "5123, 6123, 123, ..."
-    print('filter for exact match')
+    self.logger.info('filter for exact match')
     details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line1" and starts-with(string(), "%s ")]/a/@href'%(response.meta['register_number']))
     if len(details_url) == 1:
         if not is_multi:
@@ -97,16 +96,15 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
     if len(details_url) == 0:
         if not is_multi:
-            print("Filter by exact failed. Aborting")
-            return
+            raise ValueError("Filter by exact failed. Aborting")
         else:
           return self.move_to_next_page(response, has_next)
 
-    print("Filtered down to %s results"%len(details_url))
-    print(details_url)
+    self.logger.info("Filtered down to %s results"%len(details_url))
+    # print(details_url)
 
     # filter by register_place
-    print('filter for register place')
+    self.logger.info('filter for register place')
     details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line2" and contains(string(), "%s")]/preceding-sibling::div[@class="res_line1"][1]/a/@href'%(response.meta['register_place']))
     if len(details_url) == 1:
         if not is_multi:
@@ -123,12 +121,14 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
     if len(details_url) > 1:
         # print(details_url)
-        print("Need to filter further. Aborting")
-        return
+        raise ValueError("Need to filter further. Aborting")
         
-    print("Filtered down to %s results"%len(details_url))
-    print("Filter failed. Aborting")
-    return
+    raise ValueError(
+        "Filtered down to %s results. %s. Aborting"%(
+            len(details_url), 
+            "Need to filter further" if len(details_url) > 1 else "Entity not found"
+        )
+    )
 
   def move_to_next_page(self, response, has_next):
     # if multi-page scenario, gather all results first
@@ -160,9 +160,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       url = details_url,
       callback=self.after_result
     )
-    request.meta['register_number'] = response.meta['register_number']
-    #yield request
-    yield None
+    request.meta.update(response.meta)
+    yield request
 
   def after_result(self, response):
     qs_set = response.xpath('//table[@id="Relations_ListView_itemPlaceholderContainer"]/tr')
@@ -173,7 +172,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       q2=q2[0]
       yield {
         'register_number': response.meta['register_number'],
-        'obligor_alien': q2,
+        'register_place':  response.meta['register_place'],
+        'obligor_alien':   q2,
       }
  
 
