@@ -99,6 +99,16 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     with self.assertRaises(ValueError):
         request_2 = list(self.spider.after_search(response_1b)) # hxs
 
+  def test_2c_after_search_singlepage_singleresult(self):
+    self.filter_df_in('single page/single result')
+    request_2, response_1, request_1 = self.get_request_2()
+    
+    self.assertEqual(1, len(request_2))
+    request_2 = request_2[0]
+    self.assertEqual('GET', request_2.method)
+    #print(request_2.url)
+    self.assertTrue('id=5000022640' in str(request_2.url))
+
   def test_3_after_result(self):
     self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
