@@ -17,6 +17,9 @@ class ScrapyCrJusticeGovLbPipeline(object):
       self.df = pd.DataFrame()
 
     def process_item(self, item, spider):
+      #print("----"*10)
+      #print("----"*10)
+      print("appending item to pipeline df")
       item2 = dict(item)
       self.df = self.df.append(item2, ignore_index=True)
       return item
@@ -34,6 +37,9 @@ class ScrapyCrJusticeGovLbPipeline(object):
         translate_client = translate.Client()
         get_trans = lambda text: translate_client.translate(text, target_language='en')['translatedText']
         self.df['name_en'] = self.df['obligor_alien'].apply(get_trans)
+        
+      # print
+      print(self.df)
   
       # save to file
       import tempfile

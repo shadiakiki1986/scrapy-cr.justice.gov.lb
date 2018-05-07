@@ -109,6 +109,16 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     #print(request_2.url)
     self.assertTrue('id=5000022640' in str(request_2.url))
 
+  def test_2d_after_search_multipage_singleresult(self):
+    self.filter_df_in('multiple pages/multiple aliens')
+    request_2, response_1, request_1 = self.get_request_2()
+    
+    self.assertEqual(1, len(request_2))
+    request_2 = request_2[0]
+    self.assertEqual('POST', request_2.method)
+    self.assertTrue('FindBox=5792' in str(request_2.body))
+    # print(request_2.__dict__)
+
   def test_3_after_result(self):
     self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
