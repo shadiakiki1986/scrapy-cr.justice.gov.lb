@@ -29,6 +29,12 @@ export GOOGLE_APPLICATION_CREDENTIALS=abc123
 scrapy crawl ...
 ```
 
+Note that this is a paid service by Google Cloud Platform
+
+
+For testing xpath against html, useful website: http://www.xpathtester.com/xpath
+
+
 Run test
 ```
 python -m unittest scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
@@ -47,3 +53,12 @@ pip install scrapyrt
 scrapyrt -i 0.0.0.0 -p 3005
 curl -X POST -H "Content-Type: application/json" -d '{"spider_name":"cr_justice_gov_lb_base", "request": {"meta": {"df_in": [{"register_number": "66942", "register_place": "jabal"}]}, "callback": "parse", "url": "http://duckduckgo.com"}}' http://bsec-apps.net:3005/crawl.json
 ```
+
+## Note on transliteration
+
+The original result is in arabic characters.
+Transliterating with [buckwalter](https://github.com/shadiakiki1986/ocr-arabic/blob/master/transliterate.py) was poor.
+Testing translating with [translate.google.com](https://translate.google.com) was much better,
+e.g. labib instead of lbyb
+so I resort to the [Google Cloud Translation API](https://cloud.google.com/translate/docs/translating-text#translate-translate-text-python)
+
