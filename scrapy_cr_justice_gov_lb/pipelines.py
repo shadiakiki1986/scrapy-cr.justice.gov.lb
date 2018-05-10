@@ -29,6 +29,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
     def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
       self.df = pd.DataFrame()
+      self.fn = None
 
     def process_item(self, item, spider):
       #print("----"*10)
@@ -61,6 +62,6 @@ class ScrapyCrJusticeGovLbPipeline(object):
       suffix_2 = next(tempfile._get_candidate_names())
       suffix_1 = dt.datetime.strftime(dt.datetime.now(), "%Y%m%d_%H%M%S")
       temp_name = "scrape_%s_%s.csv"%(suffix_1, suffix_2)
-      fn = os.path.join(default_tmp_dir, temp_name)
-      self.df.to_csv(fn, index=False)
-      print("Save to %s"%fn)
+      self.fn = os.path.join(default_tmp_dir, temp_name)
+      self.df.to_csv(self.fn, index=False)
+      print("Saved to %s"%self.fn)
