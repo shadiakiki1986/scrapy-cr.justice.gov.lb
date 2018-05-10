@@ -1,7 +1,10 @@
 # scrapy-cr.justice.gov.lb
 scrapy spider that extracts shareholder names from http://cr.justice.gov.lb using the commercial register number
 
+
 ## Installation
+
+1. To run the srapy spider locally:
 
 ```
 pew new -r requirements.txt SCRAPY_CRJUST
@@ -9,7 +12,16 @@ pew new -r requirements.txt SCRAPY_CRJUST
 
 Copy `scrapy.cfg.dist` to `scrapy.cfg` and modify as needed
 
-Scrapy-fu from [tutorial](https://doc.scrapy.org/en/latest/intro/tutorial.html)
+Then use scrapy-fu from [tutorial](https://doc.scrapy.org/en/latest/intro/tutorial.html)
+
+2. To install this as a dependency in another project
+
+```
+pip install git+https://github.com/shadiakiki1986/scrapy-cr.justice.gov.lb.git
+```
+
+or append the URL to your `requirements.txt` or `setup.py` file.
+
 
 ## Usage
 
