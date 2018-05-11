@@ -102,3 +102,9 @@ ENV/
 
 # shadi
 .*swp
+
+jupyter.sh
+notebooks/
+scrape_merged_sample_20180507A.csv
+untitled.txt
+
