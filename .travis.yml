@@ -1,5 +1,8 @@
 language: python
 
+python:
+- "3.6"
+
 script:
 - python -m unittest scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
 
