@@ -41,6 +41,13 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 #    df_in = df_in[df_in['register_number']=='2471'] # FIXME
     print("input df")
     print(df_in)
+
+    # prepare fields to be appended
+    df_in['details_url'] = None
+    df_in['obligor_alien'] = None
+    df_in['relationship'] = None
+
+    # save and return
     self.df_in = df_in
     return super().__init__(*args, **kwargs)
 
@@ -55,6 +62,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       self.logger.info('parse .. request =')
       request.meta['register_number'] = row['register_number']
       request.meta['register_place'] = row['register_place']
+      request.meta['df_idx'] = index
       self.logger.info('yield parse')
       yield request
 
@@ -226,13 +234,25 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       if len(q2)==0: continue
       q2=q2[0]
       q3 = quote.xpath('td[3]/span/text()').extract_first()
-      yield {
-        'register_number': response.meta['register_number'],
-        'register_place':  response.meta['register_place'],
-        'details_url':  response.meta['details_url'],
-        'obligor_alien':   q2,
-        'relationship': q3,
-      }
+
+      # check nothing went wrong 
+      idx = response.meta['df_idx']
+      if self.df_in.loc[idx, 'register_number'] != response.meta['register_number']:
+        raise ValueError("df_in[idx,register_number'] mismatch with response")
+
+      if self.df_in.loc[idx, 'register_place'] != response.meta['register_place']:
+        raise ValueError("df_in[idx,register_place'] mismatch with response")
+
+      # save in df_in
+      self.df_in.loc[idx, 'details_url'] = response.meta['details_url']
+      self.df_in.loc[idx, 'obligor_alien'] = q2
+      self.df_in.loc[idx, 'relationship'] = q3
+
+      # TODO simplify by
+      # - yield idx
+      # - use spider.df_in in the pipeline.close_spider
+      # - delete the function pipeline.process_item
+      yield dict(self.df_in.loc[idx]])
  
 
 class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
