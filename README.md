@@ -1,4 +1,7 @@
 # scrapy-cr.justice.gov.lb
+
+[![Build Status](https://travis-ci.org/shadiakiki1986/scrapy-cr.justice.gov.lb.svg?branch=master)](https://travis-ci.org/shadiakiki1986/scrapy-cr.justice.gov.lb)
+
 scrapy spider that extracts shareholder names from http://cr.justice.gov.lb using the commercial register number
 
 
