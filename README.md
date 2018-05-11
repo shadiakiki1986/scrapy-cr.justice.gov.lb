@@ -74,3 +74,4 @@ Testing translating with [translate.google.com](https://translate.google.com) wa
 e.g. labib instead of lbyb
 so I resort to the [Google Cloud Translation API](https://cloud.google.com/translate/docs/translating-text#translate-translate-text-python)
 
+
