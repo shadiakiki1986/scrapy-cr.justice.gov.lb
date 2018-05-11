@@ -252,7 +252,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       # - yield idx
       # - use spider.df_in in the pipeline.close_spider
       # - delete the function pipeline.process_item
-      yield dict(self.df_in.loc[idx]])
+      yield dict(self.df_in.loc[idx])
  
 
 class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):

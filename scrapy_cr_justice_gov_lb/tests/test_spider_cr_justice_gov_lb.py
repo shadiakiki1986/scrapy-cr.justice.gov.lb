@@ -76,15 +76,13 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     response_1b = convert_response_from_requests_scrapy(response_1, request_1)
     
     # pass scrapy response to spider function to test    
-    request_2 = list(self.spider.after_search(response_1b))
+    request_2 = self.spider.after_search(response_1b)
     return request_2, response_1, request_1
 
   def test_2a_after_search_pass(self):
     self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
     
-    self.assertEqual(1, len(request_2))
-    request_2 = request_2[0]
     self.assertEqual('GET', request_2.method)
     # print(response_2.__dict__)
     self.assertTrue('id=2000004239' in str(request_2.url))
@@ -103,8 +101,6 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.filter_df_in('single page/single result')
     request_2, response_1, request_1 = self.get_request_2()
     
-    self.assertEqual(1, len(request_2))
-    request_2 = request_2[0]
     self.assertEqual('GET', request_2.method)
     #print(request_2.url)
     self.assertTrue('id=5000022640' in str(request_2.url))
@@ -113,8 +109,6 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     self.filter_df_in('multiple pages/multiple aliens')
     request_2, response_1, request_1 = self.get_request_2()
     
-    self.assertEqual(1, len(request_2))
-    request_2 = request_2[0]
     self.assertEqual('POST', request_2.method)
     self.assertTrue('FindBox=5792' in str(request_2.body))
     # print(request_2.__dict__)
@@ -122,19 +116,19 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
   def test_3_after_result(self):
     self.filter_df_in('single page/multiple results')
     request_2, response_1, request_1 = self.get_request_2()
-    request_2 = request_2[0]
     response_2 = self.session.get(request_2.url)
     response_2b = convert_response_from_requests_scrapy(response_2, request_2)
     
     obligor_alien_set = list(self.spider.after_result(response_2b))
     self.assertEqual(20, len(obligor_alien_set))
     obligor_alien_set = pd.DataFrame(obligor_alien_set)
-    # print(obligor_alien_set)
-    df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_singlepage_multiresult.csv')
+
+    df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_singlepage_multiresult.pkl')
     # uncomment the below to update the fixture
-    # obligor_alien_set.to_csv(df_out, index=False)
+    # obligor_alien_set.to_pickle(df_out)
     
-    expected = pd.read_csv(df_out)
+    expected = pd.read_pickle(df_out)
     #print(expected.columns, obligor_alien_set.columns)
     #print(expected)
+    #print(obligor_alien_set[expected.columns])
     pd.testing.assert_frame_equal(obligor_alien_set[expected.columns], expected)
