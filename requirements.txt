@@ -3,4 +3,8 @@ betamax==0.8.1
 # not sure if this is the right way to go
 # to install dependencies listed in setup.py
 # https://caremad.io/posts/2013/07/setup-vs-requirement/
+#
+# Maybe check other projects
+# like https://github.com/reddit/rollingpin
+
 -e .
