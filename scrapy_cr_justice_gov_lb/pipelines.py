@@ -16,7 +16,7 @@ def wrap_translate(translate_client, text):
     # trick to transliterate names such as "kamel" so that they don't become "full"
     # Ref: https://stackoverflow.com/questions/50209588/transliterate-arabic-names-to-latin-characters/50210091#50210091
     text = '%s "%s"'%("أَنا إِسمي", text)
-    res = translate_client.translate(text, target_language='en')['translatedText']
+    res = translate_client.translate(text, source_language='ar', target_language='en')['translatedText']
     res = res.lower()
     res = res.replace('my name is ',''
                      ).replace('i am my name ',''
