@@ -78,3 +78,11 @@ e.g. labib instead of lbyb
 so I resort to the [Google Cloud Translation API](https://cloud.google.com/translate/docs/translating-text#translate-translate-text-python)
 
 
+## Changelog
+
+Version 0.0.5
+* added spider "Single" for usage with [scrapyrt](http://scrapyrt.readthedocs.io/) (experimental)
+
+
+Version 0.0.4 (2018-05-01)
+* first working version

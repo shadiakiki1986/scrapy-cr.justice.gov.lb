@@ -273,3 +273,11 @@ class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
         dtype={'register_number': object} 
     )
     super().__init__(df_in=df_in, *args, **kwargs)
+
+
+class ScrapyCrJusticeGovLbSpiderSingle(ScrapyCrJusticeGovLbSpiderBase):
+  name = "cr_justice_gov_lb_single"
+  def __init__(self, register_number, register_place, *args, **kwargs):
+    df_in = pd.DataFrame({'register_number': [register_number], 'register_place': [register_place]})
+    super().__init__(df_in=df_in, *args, **kwargs)
+

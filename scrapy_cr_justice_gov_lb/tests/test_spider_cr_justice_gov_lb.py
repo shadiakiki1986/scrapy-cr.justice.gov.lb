@@ -7,7 +7,7 @@ from betamax.fixtures.unittest import BetamaxTestCase
 from betamax import Betamax
 import unittest
 # from unittest import TestCase
-from ..spiders.cr_justice_gov_lb import ScrapyCrJusticeGovLbSpiderCsv
+from ..spiders.cr_justice_gov_lb import *
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +38,7 @@ def convert_response_from_requests_scrapy(response_1, request_1):
         request = request_1
     )
 
-class TestSpiderCrJusticeGovLb(BetamaxTestCase):
+class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
   def setUp(self):
     df_in = os.path.join(BASE_DIR, 'tests/fixtures/df_in_sample.csv')
     self.spider = ScrapyCrJusticeGovLbSpiderCsv(df_in)
@@ -132,3 +132,9 @@ class TestSpiderCrJusticeGovLb(BetamaxTestCase):
     #print(expected)
     #print(obligor_alien_set[expected.columns])
     pd.testing.assert_frame_equal(obligor_alien_set[expected.columns], expected)
+
+
+class TestSpiderCrJusticeGovLbSingle(BetamaxTestCase):
+  def test_init(self):
+    spider = ScrapyCrJusticeGovLbSpiderSingle(register_number='66942', register_place='Mount Lebanon')
+    self.assertTrue(True)
