@@ -276,8 +276,25 @@ class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
 
 
 class ScrapyCrJusticeGovLbSpiderSingle(ScrapyCrJusticeGovLbSpiderBase):
+  """
+  Use with scrapyrt
+  curl http://localhost:3000/crawl.json?url=http://example.com/66942/Mount+Lebanon&spider_name=cr_justice_gov_lb_single
+  """
   name = "cr_justice_gov_lb_single"
-  def __init__(self, register_number, register_place, *args, **kwargs):
-    df_in = pd.DataFrame({'register_number': [register_number], 'register_place': [register_place]})
+  def __init__(self, *args, **kwargs):
+    # FIXME
+    # self.url is not picking the url passed, but the static one defined here
+    # check https://github.com/scrapinghub/scrapyrt/issues/29
+    if not '/' in self.url:
+      raise ValueError("url format should be register number/place")
+
+    df_in = self.split_url(self.url)
     super().__init__(df_in=df_in, *args, **kwargs)
+
+  def split_url(self, url):
+    url = url.replace('http://example.com/', '')
+    all_split = url.split('/')
+    register_number, register_place = all_split[0], all_split[1]
+    df_in = pd.DataFrame({'register_number': [register_number], 'register_place': [register_place]})
+    return df_in
 

@@ -136,5 +136,5 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
 
 class TestSpiderCrJusticeGovLbSingle(BetamaxTestCase):
   def test_init(self):
-    spider = ScrapyCrJusticeGovLbSpiderSingle(register_number='66942', register_place='Mount Lebanon')
+    spider = ScrapyCrJusticeGovLbSpiderSingle(url='http://example.com/66942/Mount+Lebanon')
     self.assertTrue(True)
