@@ -53,18 +53,21 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
   def parse(self, response):
     for index, row in self.df_in.iterrows():
-      self.logger.info("searching for %s - %s"%(row['register_number'], row['register_place']))
+      yield self.request_search(response, index, row['register_number'], row['register_place'])
+
+  def request_search(self, response, index, register_number, register_place):
+      self.logger.info("searching for %s - %s"%(register_number, register_place))
       request = scrapy.FormRequest.from_response(
         response,
-        formdata={'FindBox': row['register_number']},
+        formdata={'FindBox': register_number},
         callback=self.after_search
       )
-      self.logger.info('parse .. request =')
-      request.meta['register_number'] = row['register_number']
-      request.meta['register_place'] = row['register_place']
+      #self.logger.info('parse .. request =')
+      request.meta['register_number'] = register_number
+      request.meta['register_place'] = register_place
       request.meta['df_idx'] = index
       self.logger.info('yield parse')
-      yield request
+      return request
 
 
   def after_search(self, response):
