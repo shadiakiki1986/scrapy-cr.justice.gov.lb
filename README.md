@@ -61,12 +61,14 @@ Each test has one file in `test/fixtures/cassettes`.
 To update the recorded responses, `rm test/fixtures/cassettes/*json` and run all tests.
 This will recreate the deleted json files, with fresh content
 
-Using [scrapyrt](http://scrapyrt.readthedocs.io/en/latest/api.html#) (experimental)
+Using [scrapyrt](http://scrapyrt.readthedocs.io/en/latest/api.html#)
 
 ```
 pip install scrapyrt
-scrapyrt -i 0.0.0.0 -p 3005
-curl -X POST -H "Content-Type: application/json" -d '{"spider_name":"cr_justice_gov_lb_base", "request": {"meta": {"df_in": [{"register_number": "66942", "register_place": "jabal"}]}, "callback": "parse", "url": "http://duckduckgo.com"}}' http://bsec-apps.net:3005/crawl.json
+scrapyrt -i 0.0.0.0 -p 3000
+
+curl http://localhost:3000/crawl.json \
+  -d '{"request":{"url": "http://example.com", "meta": {"df_in": [{"register_number": "66942", "register_place": "Mount Lebanon"}]}}, "spider_name": "cr_justice_gov_lb_single"}'
 ```
 
 ## Note on transliteration
@@ -81,7 +83,7 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 ## Changelog
 
 Version 0.0.5
-* added spider "Single" for usage with [scrapyrt](http://scrapyrt.readthedocs.io/) (experimental)
+* added spider "Single" for usage with [scrapyrt](http://scrapyrt.readthedocs.io/)
 
 
 Version 0.0.4 (2018-05-01)

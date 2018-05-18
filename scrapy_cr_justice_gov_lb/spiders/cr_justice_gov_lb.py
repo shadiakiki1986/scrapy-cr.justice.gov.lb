@@ -135,8 +135,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.logger.info('filter for register place')
     """
     details_url = response.selector.xpath('//div[@id="ListView1_itemPlaceholderContainer"]/div[@class="res_line1" and starts-with(string(), "%s ")]/following-sibling::div[@class="res_line2"][1][contains(string(), "%s")]/preceding-sibling::div[@class="res_line1"][1]/a/@href'%(response.meta['register_number'], response.meta['register_place']))
-    if len(details_url)>=1:
-        print(response.body.decode('utf-8'))
+    #if len(details_url)>=1:
+    #    print(response.body.decode('utf-8'))
         
     if len(details_url) > 1:
         # print(details_url)
@@ -275,26 +275,31 @@ class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
     super().__init__(df_in=df_in, *args, **kwargs)
 
 
-class ScrapyCrJusticeGovLbSpiderSingle(ScrapyCrJusticeGovLbSpiderBase):
+class ScrapyCrJusticeGovLbSpiderSingle(scrapy.Spider):
   """
   Use with scrapyrt
-  curl http://localhost:3000/crawl.json?url=http://example.com/66942/Mount+Lebanon&spider_name=cr_justice_gov_lb_single
+
+  curl http://localhost:3000/crawl.json \
+    -d '{"request":{"url": "http://example.com", "meta": {"df_in": [{"register_number": "66942", "register_place": "Mount Lebanon"}]}}, "spider_name": "cr_justice_gov_lb_single"}'
   """
   name = "cr_justice_gov_lb_single"
-  def __init__(self, *args, **kwargs):
-    # FIXME
-    # self.url is not picking the url passed, but the static one defined here
-    # check https://github.com/scrapinghub/scrapyrt/issues/29
-    if not '/' in self.url:
-      raise ValueError("url format should be register number/place")
 
-    df_in = self.split_url(self.url)
-    super().__init__(df_in=df_in, *args, **kwargs)
+  def parse(self, response):
+    if "df_in" not in response.meta:
+      raise ValueError("Missing key in meta: %s"%"df_in")
 
-  def split_url(self, url):
-    url = url.replace('http://example.com/', '')
-    all_split = url.split('/')
-    register_number, register_place = all_split[0], all_split[1]
-    df_in = pd.DataFrame({'register_number': [register_number], 'register_place': [register_place]})
-    return df_in
+    for row in response.meta['df_in']:
+      for required_field in ["register_number", "register_place"]:
+        if required_field not in row:
+          raise ValueError("Missing key in meta.df_in list entry: %s"%required_field)
 
+    url = 'http://cr.justice.gov.lb/search/res_list.aspx'
+    request = scrapy.Request(url, callback=self.parse_page2)
+    request.meta.update(response.meta)
+    yield request
+
+  def parse_page2(self, response):
+    df_in = pd.DataFrame(response.meta["df_in"])
+
+    actual = ScrapyCrJusticeGovLbSpiderBase(df_in)
+    return actual.parse(response)
