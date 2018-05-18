@@ -283,6 +283,7 @@ class ScrapyCrJusticeGovLbSpiderSingle(scrapy.Spider):
     -d '{"request":{"url": "http://example.com", "meta": {"df_in": [{"register_number": "66942", "register_place": "Mount Lebanon"}]}}, "spider_name": "cr_justice_gov_lb_single"}'
   """
   name = "cr_justice_gov_lb_single"
+  url = 'http://cr.justice.gov.lb/search/res_list.aspx'
 
   def parse(self, response):
     if "df_in" not in response.meta:
@@ -293,8 +294,7 @@ class ScrapyCrJusticeGovLbSpiderSingle(scrapy.Spider):
         if required_field not in row:
           raise ValueError("Missing key in meta.df_in list entry: %s"%required_field)
 
-    url = 'http://cr.justice.gov.lb/search/res_list.aspx'
-    request = scrapy.Request(url, callback=self.parse_page2)
+    request = scrapy.Request(self.url, callback=self.parse_page2)
     request.meta.update(response.meta)
     yield request
 

@@ -136,5 +136,15 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
 
 class TestSpiderCrJusticeGovLbSingle(BetamaxTestCase):
   def test_init(self):
-    spider = ScrapyCrJusticeGovLbSpiderSingle(url='http://example.com/66942/Mount+Lebanon')
+    spider = ScrapyCrJusticeGovLbSpiderSingle()
+
+    # copy from get_request_1 above
+    response = self.session.get(spider.url)
+
+    # FIXME
+    #response.meta['df_in'] = [
+    #  {'register_number': 66942, 'register_place': 'Mount+Lebanon'},
+    #]
+    #request = list(spider.parse(response))
+
     self.assertTrue(True)
