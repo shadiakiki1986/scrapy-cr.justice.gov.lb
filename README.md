@@ -71,7 +71,7 @@ curl http://localhost:3000/crawl.json \
   -d '{"request":{"url": "http://example.com", "meta": {"df_in": [{"register_number": "66942", "register_place": "Mount Lebanon"}]}}, "spider_name": "cr_justice_gov_lb_single"}'
 ```
 
-Sample result available in `scrapyrt-sample.json`
+Sample result available in `scrapyrt-sample.json` (also available at [this link](https://s3-us-west-2.amazonaws.com/keras-models-factory/scrapy-crjusticegovlb-scrapyrt-sample.json))
 
 
 ## Note on transliteration
