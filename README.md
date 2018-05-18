@@ -4,6 +4,8 @@
 
 scrapy spider that extracts shareholder names from http://cr.justice.gov.lb using the commercial register number
 
+Check [cr.justice.gov.lb-proxy](https://github.com/shadiakiki1986/cr.justice.gov.lb-proxy) for a flask app wrapping this spider via [scrapyrt](http://scrapyrt.readthedocs.io/)
+
 
 ## Installation
 
