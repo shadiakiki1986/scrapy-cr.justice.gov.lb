@@ -1,4 +1,8 @@
+# for test fixtures
 betamax==0.8.1
+
+# for serving spider over http api
+scrapyrt==0.10
 
 # not sure if this is the right way to go
 # to install dependencies listed in setup.py

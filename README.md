@@ -71,6 +71,9 @@ curl http://localhost:3000/crawl.json \
   -d '{"request":{"url": "http://example.com", "meta": {"df_in": [{"register_number": "66942", "register_place": "Mount Lebanon"}]}}, "spider_name": "cr_justice_gov_lb_single"}'
 ```
 
+Sample result available in `scrapyrt-sample.json`
+
+
 ## Note on transliteration
 
 The original result is in arabic characters.
