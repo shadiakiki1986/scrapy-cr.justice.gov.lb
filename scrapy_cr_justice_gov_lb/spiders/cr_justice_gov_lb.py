@@ -247,6 +247,11 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         raise ValueError("df_in[idx,register_place'] mismatch with response")
 
       # save in df_in
+      # Edit 2018-05-26:
+      # FIXME is this really the right place?
+      # Isn't `df_in` one row per originator?
+      # This would be overwriting each originator/obligor relationship in the dataframe.
+      # In this case, it is not possible to just return "idx"
       self.df_in.loc[idx, 'details_url'] = response.meta['details_url']
       self.df_in.loc[idx, 'obligor_alien'] = q2
       self.df_in.loc[idx, 'relationship'] = q3
@@ -255,6 +260,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       # - yield idx
       # - use spider.df_in in the pipeline.close_spider
       # - delete the function pipeline.process_item
+      # Edit 2018-05-26 Check note above
+      #                 Maybe should just keep this as is
+      #                 Or have another dataframe variable `df_out`
       yield dict(self.df_in.loc[idx])
  
 

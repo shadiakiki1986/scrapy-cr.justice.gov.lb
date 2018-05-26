@@ -87,7 +87,11 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
-Version 0.0.5
+Version 0.0.6 (2018-05-??)
+* added in-line comments in code and FIXME tags and betamax fixture cassettes that were not committed
+
+
+Version 0.0.5 (2018-05-22)
 * added spider "Single" for usage with [scrapyrt](http://scrapyrt.readthedocs.io/)
 
 
