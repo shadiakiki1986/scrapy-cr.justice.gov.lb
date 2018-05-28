@@ -6,3 +6,5 @@ python:
 script:
 - python -m unittest scrapy_cr_justice_gov_lb.tests.test_spider_cr_justice_gov_lb -v
 
+# integration test
+- scrapy crawl cr_justice_gov_lb_csv -a csv_in=scrapy_cr_justice_gov_lb/tests/fixtures/df_in_sample.csv

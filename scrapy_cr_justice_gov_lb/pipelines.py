@@ -26,32 +26,43 @@ def wrap_translate(translate_client, text):
     return res
 
 class ScrapyCrJusticeGovLbPipeline(object):
+    """
+    Pipeline which gathers all "items" into a pandas dataframe.
+    After the close_spider, the pipeline will have 2 main class members:
+    - df_in (input to spider, company info)
+    - df_out (output from spider, shareholder/etc info)
+    """
     def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
-      self.df = pd.DataFrame()
+      self.df_out = pd.DataFrame()
 
     def process_item(self, item, spider):
       #print("----"*10)
       #print("----"*10)
       print("appending item to pipeline df")
       item2 = dict(item)
-      self.df = self.df.append(item2, ignore_index=True)
+      self.df_out = self.df_out.append(item2, ignore_index=True)
       return item
   
     def close_spider(self, spider):
-      if self.df.shape[0]==0:
+      self.df_in = spider.df_in
+      if self.df_out.shape[0]==0:
         logging.info("No results to show")
         return
 
       # drop duplicates
-      self.df = self.df[~self.df.duplicated()]
+      self.df_out = self.df_out[~self.df_out.duplicated()]
   
       # transliterate
       if os.getenv('GOOGLE_APPLICATION_CREDENTIALS', None) is not None:
         translate_client = translate.Client()
         get_trans = lambda text: wrap_translate(translate_client, text)
-        self.df['name_en'] = self.df['obligor_alien'].apply(get_trans)
+        self.df_out['name_en'] = self.df_out['obligor_alien'].apply(get_trans)
         
       # print
-      print(self.df)
+      print('input')
+      print(self.df_in)
+
+      print('output')
+      print(self.df_out)
 
