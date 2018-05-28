@@ -151,8 +151,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     if len(details_url) > 1:
         # print(details_url)
         msg = "Need to filter further. Aborting"
-        yield self.yield_df_in(msg, response)
-        raise ValueError(msg)
+        self.logger.error(msg)
+        return self.yield_df_in(msg, response)
         
     if len(details_url) == 0:
         if not is_multi:
@@ -160,8 +160,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 len(details_url), 
                 "Need to filter further" if len(details_url) > 1 else "Entity not found"
             )
-            yield self.yield_df_in(msg, response)
-            raise ValueError(msg)
+            self.logger.error(msg)
+            return self.yield_df_in(msg, response)
 
         else:
             return self.move_to_next_page(response, has_next)
@@ -187,8 +187,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 response.meta['page_items'].append(details_url)
                 print(response.meta['page_items'])
                 msg = "Got more than 1 result. Aborting"
-                yield self.yield_df_in(msg, response)
-                raise ValueError(msg)
+                self.logger.error(msg)
+                return self.yield_df_in(msg, response)
 
         return self.move_to_next_page(response, has_next)
 
@@ -206,16 +206,16 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         #    print(response.meta['page_items'])
         if len(response.meta['page_items'])>1:
             msg = "Found at least %s results. Need to filter further. Aborting"%(len(response.meta['page_items']))
-            yield self.yield_df_in(msg, response)
-            raise ValueError(msg)
+            self.logger.error(msg)
+            return self.yield_df_in(msg, response)
         
     if not has_next or response.meta['page_num'] >= MAX_PAGES:
         self.logger.info("max pages reached" if response.meta['page_num'] >= MAX_PAGES else "no more pages with multi-page")
             
         if response.meta['page_items'] is None:
             msg = "after multi-page, didnt find any results"
-            yield self.yield_df_in(msg, response)
-            raise ValueError(msg)
+            self.logger.error(msg)
+            return self.yield_df_in(msg, response)
             
         if len(response.meta['page_items'])==1:
             details_url = response.meta['page_items'][0]
@@ -226,8 +226,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
             #return
         
         msg = "after multi-page, found %s results. Need to filter further"%len(response.meta['page_items'])
-        yield self.yield_df_in(msg, response)
-        raise ValueError(msg)
+        self.logger.error(msg)
+        return self.yield_df_in(msg, response)
 
 
     # if there are multiple pages, get the next page and re-parse with after_search
@@ -261,8 +261,6 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     msg = "for %s got %s aliens"%(response.meta['register_number'], len(qs_set))
     self.logger.info(msg)
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-    # can yield df_in entry now
-    yield self.yield_df_in(msg, response)
 
     for quote in qs_set:
       q2 = quote.xpath('td[1]/span/text()').extract()
@@ -291,6 +289,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       }
       yield {'type': 'df_out', 'entry': row_out}
 
+    # can yield df_in entry now after qs loop
+    yield self.yield_df_in(msg, response)
  
 
 class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):

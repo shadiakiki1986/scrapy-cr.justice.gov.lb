@@ -40,7 +40,8 @@ class ScrapyCrJusticeGovLbPipeline(object):
     def process_item(self, item, spider):
       #print("----"*10)
       #print("----"*10)
-      print("appending item to pipeline df")
+      #print("appending item to pipeline df")
+      #print(item)
       item2 = dict(item)
       if item2['type'] == 'df_out':
         self.df_out = self.df_out.append(item2['entry'], ignore_index=True)
