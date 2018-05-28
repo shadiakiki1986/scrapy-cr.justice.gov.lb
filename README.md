@@ -87,8 +87,9 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
-Version 0.1.1? (2018-05-??)
+Version 0.1.1? (2018-05-28?)
 * bug fix for spider=None passed
+* add `pipeline.merge_in_out` for convenience
 
 
 Version 0.1.0 (2018-05-28)
