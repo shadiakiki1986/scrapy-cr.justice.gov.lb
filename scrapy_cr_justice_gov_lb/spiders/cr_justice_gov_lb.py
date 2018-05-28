@@ -18,6 +18,7 @@ map_place = {
 def preprocess_df_in(df_in):
     df_in['register_place'] = df_in['register_place'].apply(lambda x: map_place[x] if x in map_place else x)
     df_in['status'] = 'Initialized'
+    df_in['details_url'] = None
     return df_in
     
 MAX_PAGES = 10 # 10 pages = 100 results at 10 results per page
@@ -42,11 +43,6 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 #    df_in = df_in[df_in['register_number']=='2471'] # FIXME
     print("input df")
     print(df_in)
-
-    # prepare fields to be appended
-    df_in['details_url'] = None
-    df_in['obligor_alien'] = None
-    df_in['relationship'] = None
 
     # save and return
     self.df_in = df_in
@@ -235,9 +231,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.logger.info(msg)
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
 
-    response.meta['details_url'] = details_url
     details_url =  'http://cr.justice.gov.lb/search/' + details_url
+    self.df_in.loc[response.meta['df_idx'], 'details_url'] = details_url
     # self.logger.info("details at %s"%(details_url))
+
     request = scrapy.Request(
       url = details_url,
       callback=self.after_result
@@ -269,24 +266,12 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         self.df_in.loc[response.meta['df_idx'], 'status'] = msg
         raise ValueError(msg)
 
-      # save in df_in
-      # Edit 2018-05-26:
-      # FIXME is this really the right place?
-      # Isn't `df_in` one row per originator?
-      # This would be overwriting each originator/obligor relationship in the dataframe.
-      # In this case, it is not possible to just return "idx"
-      self.df_in.loc[idx, 'details_url'] = response.meta['details_url']
-      self.df_in.loc[idx, 'obligor_alien'] = q2
-      self.df_in.loc[idx, 'relationship'] = q3
-
-      # TODO simplify by
-      # - yield idx
-      # - use spider.df_in in the pipeline.close_spider
-      # - delete the function pipeline.process_item
-      # Edit 2018-05-26 Check note above
-      #                 Maybe should just keep this as is
-      #                 Or have another dataframe variable `df_out`
-      yield dict(self.df_in.loc[idx])
+      # return
+      yield {
+        'df_idx': idx,
+        'obligor_alien': q2,
+        'relationship': q3,
+      }
  
 
 class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):
