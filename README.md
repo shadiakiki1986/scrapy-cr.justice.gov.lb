@@ -87,6 +87,10 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
+Version 0.1.1? (2018-05-??)
+* bug fix for spider=None passed
+
+
 Version 0.1.0 (2018-05-28)
 * added in-line comments in code and FIXME tags and betamax fixture cassettes that were not committed
 * distinguish between `df_in` and `df_out` in spider and pipeline
