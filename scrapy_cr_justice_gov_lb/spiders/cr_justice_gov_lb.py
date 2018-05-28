@@ -20,7 +20,7 @@ map_place = {
 def preprocess_df_in(df_in):
     df_in['register_place'] = df_in['register_place'].apply(lambda x: map_place[x.lower()] if x.lower() in map_place else x)
     df_in['status'] = 'Initialized'
-    df_in['details_url'] = None
+    df_in['details_url'] = ''
     df_in['df_idx'] = df_in.index.values
     return df_in
     
