@@ -51,6 +51,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   def parse(self, response):
     for index, row in self.df_in.iterrows():
       yield self.request_search(response, index, row['register_number'], row['register_place'])
+      # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
+      row2 = row.copy()
+      row2['df_idx'] = index
+      yield {'type': 'df_in', 'entry': row2}
 
   def request_search(self, response, index, register_number, register_place):
       self.logger.info("searching for %s - %s"%(register_number, register_place))
@@ -267,11 +271,13 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         raise ValueError(msg)
 
       # return
-      yield {
+      row_out = {
         'df_idx': idx,
         'obligor_alien': q2,
         'relationship': q3,
       }
+      yield {'type': 'df_out', 'entry': row_out}
+
  
 
 class ScrapyCrJusticeGovLbSpiderCsv(ScrapyCrJusticeGovLbSpiderBase):

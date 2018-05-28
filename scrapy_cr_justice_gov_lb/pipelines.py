@@ -42,7 +42,11 @@ class ScrapyCrJusticeGovLbPipeline(object):
       #print("----"*10)
       print("appending item to pipeline df")
       item2 = dict(item)
-      self.df_out = self.df_out.append(item2, ignore_index=True)
+      if item2['type'] == 'df_out':
+        self.df_out = self.df_out.append(item2['entry'], ignore_index=True)
+      else:
+        self.df_in = self.df_in.append(item2['entry'], ignore_index=True)
+
       return item
 
     def merge_in_out(self):
@@ -53,7 +57,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
       # in order to get the same dataframe as before
       df_merged = self.df_in.reset_index().merge(
         self.df_out,
-        left_on='index',
+        left_on='df_idx',
         right_on='df_idx',
         how='right'
       )
@@ -62,6 +66,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
     def close_spider(self, spider):
       if spider is not None:
         self.df_in = spider.df_in
+        self.df_in.set_index('df_idx', inplace=True)
 
       if self.df_out.shape[0]==0:
         logging.info("No results to show")
