@@ -19,6 +19,7 @@ def preprocess_df_in(df_in):
     df_in['register_place'] = df_in['register_place'].apply(lambda x: map_place[x] if x in map_place else x)
     df_in['status'] = 'Initialized'
     df_in['details_url'] = None
+    df_in['df_idx'] = df_in.index.values
     return df_in
     
 MAX_PAGES = 10 # 10 pages = 100 results at 10 results per page
@@ -51,10 +52,6 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   def parse(self, response):
     for index, row in self.df_in.iterrows():
       yield self.request_search(response, index, row['register_number'], row['register_place'])
-      # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
-      row2 = row.copy()
-      row2['df_idx'] = index
-      yield {'type': 'df_in', 'entry': dict(row2)} # dict needed for json serialization in scrapyrt
 
   def request_search(self, response, index, register_number, register_place):
       self.logger.info("searching for %s - %s"%(register_number, register_place))
@@ -70,6 +67,20 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       request.meta['df_idx'] = index
       self.logger.info('yield parse')
       return request
+
+  def yield_df_in(self, msg, response):
+    idx = response.meta['df_idx']
+    self.df_in.loc[idx, 'status'] = msg
+    # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
+    # dict needed for json serialization in scrapyrt
+    yield {
+      'type': 'df_in',
+      'entry': dict(self.df_in.loc[idx])
+    }
+
+  def raise_error(self, msg, response):
+    self.yield_df_in(msg, response)
+    raise ValueError(msg)
 
 
   def after_search(self, response):
@@ -145,8 +156,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     if len(details_url) > 1:
         # print(details_url)
         msg = "Need to filter further. Aborting"
-        self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-        raise ValueError(msg)
+        return self.raise_error(msg, response)
         
     if len(details_url) == 0:
         if not is_multi:
@@ -154,8 +164,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 len(details_url), 
                 "Need to filter further" if len(details_url) > 1 else "Entity not found"
             )
-            self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-            raise ValueError(msg)
+            return self.raise_error(msg, response)
         else:
             return self.move_to_next_page(response, has_next)
 
@@ -179,7 +188,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 self.logger.info("Appending new result")
                 response.meta['page_items'].append(details_url)
                 print(response.meta['page_items'])
-                raise ValueError("Got more than 1 result. Aborting")
+                msg = "Got more than 1 result. Aborting"
+                return self.raise_error(msg, response)
+
 
         return self.move_to_next_page(response, has_next)
 
@@ -197,16 +208,15 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         #    print(response.meta['page_items'])
         if len(response.meta['page_items'])>1:
             msg = "Found at least %s results. Need to filter further. Aborting"%(len(response.meta['page_items']))
-            self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-            raise ValueError(msg)
+            return self.raise_error(msg, response)
+
         
     if not has_next or response.meta['page_num'] >= MAX_PAGES:
         self.logger.info("max pages reached" if response.meta['page_num'] >= MAX_PAGES else "no more pages with multi-page")
             
         if response.meta['page_items'] is None:
             msg = "after multi-page, didnt find any results"
-            self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-            raise ValueError(msg)
+            return self.raise_error(msg, response)
             
         if len(response.meta['page_items'])==1:
             details_url = response.meta['page_items'][0]
@@ -217,8 +227,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
             #return
         
         msg = "after multi-page, found %s results. Need to filter further"%len(response.meta['page_items'])
-        self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-        raise ValueError(msg)
+        return self.raise_error(msg, response)
 
     # if there are multiple pages, get the next page and re-parse with after_search
     time.sleep(.5)   # delays for x seconds
@@ -251,6 +260,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     msg = "for %s got %s aliens"%(response.meta['register_number'], len(qs_set))
     self.logger.info(msg)
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
+    # can yield df_in entry now
+    self.yield_df_in(msg, response)
 
     for quote in qs_set:
       q2 = quote.xpath('td[1]/span/text()').extract()
@@ -262,13 +273,11 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       idx = response.meta['df_idx']
       if self.df_in.loc[idx, 'register_number'] != response.meta['register_number']:
         msg = "df_in[idx,register_number'] mismatch with response"
-        self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-        raise ValueError(msg)
+        return self.raise_error(msg, response)
 
       if self.df_in.loc[idx, 'register_place'] != response.meta['register_place']:
         msg = "df_in[idx,register_place'] mismatch with response"
-        self.df_in.loc[response.meta['df_idx'], 'status'] = msg
-        raise ValueError(msg)
+        return self.raise_error(msg, response)
 
       # return item wrapped in {type: ..., entry: ...}
       # Check similar note on df_in for scrapyrt
