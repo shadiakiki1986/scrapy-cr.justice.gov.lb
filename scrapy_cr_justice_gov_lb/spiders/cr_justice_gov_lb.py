@@ -1,6 +1,7 @@
 import scrapy
 import pandas as pd
 import time
+import json
 
 def validate_df_in(df_in):
     missing_cols = set(['register_number', 'register_place']) - set(df_in.columns)
@@ -73,10 +74,20 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.df_in.loc[idx, 'status'] = msg
     # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
     # dict needed for json serialization in scrapyrt
-    return {
+    out = {
       'type': 'df_in',
       'entry': dict(self.df_in.loc[idx])
     }
+    # set df_idx to int instead of np.int64 for json-serializability
+    out['entry']['df_idx'] = int(out['entry']['df_idx'])
+
+    # test that scrapyrt can serialize to json
+    try:
+      json.dumps(out)
+    except Exception as error:
+      print('dict is not scrapyrt-friendly. It could crash it')
+      raise
+    return out
 
   def after_search(self, response):
     self.logger.info('start after search')
