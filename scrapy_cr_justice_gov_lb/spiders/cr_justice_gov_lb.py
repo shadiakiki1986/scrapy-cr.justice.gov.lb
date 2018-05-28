@@ -12,12 +12,13 @@ def validate_df_in(df_in):
         raise ValueError("register_number should be a str. Received %s"%df_in['register_number'].dtype)
     
 map_place = {
-    'Mount Lebanon': 'جبل لبنان',
-    'South Lebanon': 'الجنوب',
-    'Saida': 'الجنوب',
+    'mount lebanon': 'جبل لبنان',
+    'south lebanon': 'الجنوب',
+    'saida': 'الجنوب',
+    'beirut': 'بيروت',
 }
 def preprocess_df_in(df_in):
-    df_in['register_place'] = df_in['register_place'].apply(lambda x: map_place[x] if x in map_place else x)
+    df_in['register_place'] = df_in['register_place'].apply(lambda x: map_place[x.lower()] if x.lower() in map_place else x)
     df_in['status'] = 'Initialized'
     df_in['details_url'] = None
     df_in['df_idx'] = df_in.index.values
