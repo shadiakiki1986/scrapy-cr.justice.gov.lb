@@ -119,19 +119,19 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
     response_2 = self.session.get(request_2.url)
     response_2b = convert_response_from_requests_scrapy(response_2, request_2)
     
-    obligor_alien_set = list(self.spider.after_result(response_2b))
-    self.assertEqual(20, len(obligor_alien_set))
-    obligor_alien_set = pd.DataFrame(obligor_alien_set)
+    actual = list(self.spider.after_result(response_2b))
+    self.assertEqual(20, len(actual))
+    actual = pd.DataFrame(actual)
 
     df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_singlepage_multiresult.pkl')
     # uncomment the below to update the fixture
-    # obligor_alien_set.to_pickle(df_out)
+    # actual.to_pickle(df_out)
     
     expected = pd.read_pickle(df_out)
-    #print(expected.columns, obligor_alien_set.columns)
-    #print(expected)
-    #print(obligor_alien_set[expected.columns])
-    pd.testing.assert_frame_equal(obligor_alien_set[expected.columns], expected)
+    #print('columns expected vs actual', expected.columns, actual.columns)
+    #print('expected', expected)
+    #print('actual', actual)
+    pd.testing.assert_frame_equal(actual, expected)
 
 
 class TestSpiderCrJusticeGovLbSingle(BetamaxTestCase):
