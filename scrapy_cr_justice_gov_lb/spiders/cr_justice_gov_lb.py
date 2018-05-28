@@ -270,7 +270,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         self.df_in.loc[response.meta['df_idx'], 'status'] = msg
         raise ValueError(msg)
 
-      # return
+      # return item wrapped in {type: ..., entry: ...}
+      # Check similar note on df_in for scrapyrt
       row_out = {
         'df_idx': idx,
         'obligor_alien': q2,
