@@ -67,6 +67,10 @@ class ScrapyCrJusticeGovLbPipeline(object):
       if spider is not None:
         # No longer getting this version, but using the one from process_items
         # self.df_in = spider.df_in
+        if self.df_in.shape[0]==0:
+          raise ValueError("Did not get any df_in?!?!")
+        #import pdb
+        #pdb.set_trace()
         self.df_in.set_index('df_idx', inplace=True)
 
       if self.df_out.shape[0]==0:
