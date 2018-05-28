@@ -65,7 +65,8 @@ class ScrapyCrJusticeGovLbPipeline(object):
   
     def close_spider(self, spider):
       if spider is not None:
-        self.df_in = spider.df_in
+        # No longer getting this version, but using the one from process_items
+        # self.df_in = spider.df_in
         self.df_in.set_index('df_idx', inplace=True)
 
       if self.df_out.shape[0]==0:
