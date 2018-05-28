@@ -54,7 +54,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
       row2 = row.copy()
       row2['df_idx'] = index
-      yield {'type': 'df_in', 'entry': row2}
+      yield {'type': 'df_in', 'entry': dict(row2)} # dict needed for json serialization in scrapyrt
 
   def request_search(self, response, index, register_number, register_place):
       self.logger.info("searching for %s - %s"%(register_number, register_place))
