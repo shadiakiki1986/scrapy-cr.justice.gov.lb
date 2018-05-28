@@ -34,6 +34,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
     """
     def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
+      self.df_in  = pd.DataFrame()
       self.df_out = pd.DataFrame()
 
     def process_item(self, item, spider):
@@ -45,7 +46,9 @@ class ScrapyCrJusticeGovLbPipeline(object):
       return item
   
     def close_spider(self, spider):
-      self.df_in = spider.df_in
+      if spider is not None:
+        self.df_in = spider.df_in
+
       if self.df_out.shape[0]==0:
         logging.info("No results to show")
         return
