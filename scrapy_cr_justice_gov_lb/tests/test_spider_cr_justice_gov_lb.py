@@ -94,8 +94,9 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
     # repeat request, but this time test that register_place filtering that is insufficient still raises an error
     request_1.meta['register_place'] = 'ج'
     response_1b = convert_response_from_requests_scrapy(response_1, request_1)
-    with self.assertRaises(ValueError):
-        request_2 = list(self.spider.after_search(response_1b)) # hxs
+    request_2 = self.spider.after_search(response_1b)
+    self.assertEqual('df_in', request_2['type'])
+    self.assertTrue('further' in request_2['entry']['status'])
 
   def test_2c_after_search_singlepage_singleresult(self):
     self.filter_df_in('single page/single result')
@@ -120,6 +121,7 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
     response_2b = convert_response_from_requests_scrapy(response_2, request_2)
     
     actual = list(self.spider.after_result(response_2b))
+    actual = [x['entry'] for x in actual if x['type']=='df_out']
     self.assertEqual(20, len(actual))
     actual = pd.DataFrame(actual)
 
