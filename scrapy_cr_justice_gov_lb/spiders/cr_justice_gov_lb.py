@@ -73,15 +73,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.df_in.loc[idx, 'status'] = msg
     # yield the input also, because scrapyrt doesn't give access to spider.df_in in the response
     # dict needed for json serialization in scrapyrt
-    yield {
+    return {
       'type': 'df_in',
       'entry': dict(self.df_in.loc[idx])
     }
-
-  def raise_error(self, msg, response):
-    self.yield_df_in(msg, response)
-    raise ValueError(msg)
-
 
   def after_search(self, response):
     self.logger.info('start after search')
@@ -156,7 +151,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     if len(details_url) > 1:
         # print(details_url)
         msg = "Need to filter further. Aborting"
-        return self.raise_error(msg, response)
+        yield self.yield_df_in(msg, response)
+        raise ValueError(msg)
         
     if len(details_url) == 0:
         if not is_multi:
@@ -164,7 +160,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 len(details_url), 
                 "Need to filter further" if len(details_url) > 1 else "Entity not found"
             )
-            return self.raise_error(msg, response)
+            yield self.yield_df_in(msg, response)
+            raise ValueError(msg)
+
         else:
             return self.move_to_next_page(response, has_next)
 
@@ -189,8 +187,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
                 response.meta['page_items'].append(details_url)
                 print(response.meta['page_items'])
                 msg = "Got more than 1 result. Aborting"
-                return self.raise_error(msg, response)
-
+                yield self.yield_df_in(msg, response)
+                raise ValueError(msg)
 
         return self.move_to_next_page(response, has_next)
 
@@ -208,15 +206,16 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
         #    print(response.meta['page_items'])
         if len(response.meta['page_items'])>1:
             msg = "Found at least %s results. Need to filter further. Aborting"%(len(response.meta['page_items']))
-            return self.raise_error(msg, response)
-
+            yield self.yield_df_in(msg, response)
+            raise ValueError(msg)
         
     if not has_next or response.meta['page_num'] >= MAX_PAGES:
         self.logger.info("max pages reached" if response.meta['page_num'] >= MAX_PAGES else "no more pages with multi-page")
             
         if response.meta['page_items'] is None:
             msg = "after multi-page, didnt find any results"
-            return self.raise_error(msg, response)
+            yield self.yield_df_in(msg, response)
+            raise ValueError(msg)
             
         if len(response.meta['page_items'])==1:
             details_url = response.meta['page_items'][0]
@@ -227,7 +226,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
             #return
         
         msg = "after multi-page, found %s results. Need to filter further"%len(response.meta['page_items'])
-        return self.raise_error(msg, response)
+        yield self.yield_df_in(msg, response)
+        raise ValueError(msg)
+
 
     # if there are multiple pages, get the next page and re-parse with after_search
     time.sleep(.5)   # delays for x seconds
@@ -261,7 +262,7 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.logger.info(msg)
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
     # can yield df_in entry now
-    self.yield_df_in(msg, response)
+    yield self.yield_df_in(msg, response)
 
     for quote in qs_set:
       q2 = quote.xpath('td[1]/span/text()').extract()
@@ -273,11 +274,13 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       idx = response.meta['df_idx']
       if self.df_in.loc[idx, 'register_number'] != response.meta['register_number']:
         msg = "df_in[idx,register_number'] mismatch with response"
-        return self.raise_error(msg, response)
+        yield self.yield_df_in(msg, response)
+        raise ValueError(msg)
 
       if self.df_in.loc[idx, 'register_place'] != response.meta['register_place']:
         msg = "df_in[idx,register_place'] mismatch with response"
-        return self.raise_error(msg, response)
+        yield self.yield_df_in(msg, response)
+        raise ValueError(msg)
 
       # return item wrapped in {type: ..., entry: ...}
       # Check similar note on df_in for scrapyrt
