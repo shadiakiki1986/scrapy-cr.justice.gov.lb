@@ -44,6 +44,20 @@ class ScrapyCrJusticeGovLbPipeline(object):
       item2 = dict(item)
       self.df_out = self.df_out.append(item2, ignore_index=True)
       return item
+
+    def merge_in_out(self):
+      if self.df_out.shape[0]==0:
+        raise ValueError("Cannot merge since df_out.shape[0]==0")
+
+      # df_in and df_out need merging
+      # in order to get the same dataframe as before
+      df_merged = self.df_in.reset_index().merge(
+        self.df_out,
+        left_on='index',
+        right_on='df_idx',
+        how='right'
+      )
+      return df_merged
   
     def close_spider(self, spider):
       if spider is not None:
