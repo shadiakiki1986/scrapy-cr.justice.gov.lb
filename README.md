@@ -75,6 +75,13 @@ curl http://localhost:3000/crawl.json \
 
 Sample result available in `scrapyrt-sample.json` (also available at [this link](https://s3-us-west-2.amazonaws.com/keras-models-factory/scrapy-crjusticegovlb-scrapyrt-sample.json))
 
+To update the `scrapyrt-sample.json` file,
+
+1. run the [cr.justice.gov.lb-proxy](https://github.com/shadiakiki1986/cr.justice.gov.lb-proxy) docker stack
+2. then click on the example link provided
+3. choose `json`, click `submit`
+4. and save the result to the sample file.
+
 
 ## Note on transliteration
 
