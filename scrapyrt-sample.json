@@ -2,181 +2,181 @@
   "items": [
     {
       "entry": {
+        "Name (Arabic)": "\u0645\u0633\u062a\u0634\u0641\u0649 \u0648\u0645\u0631\u0643\u0632 \u0628\u0644\u0641\u0648 \u0627\u0644\u0637\u0628\u064a \u0634.\u0645.\u0644.", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "940", 
-        "obligor_alien": "\u0645\u0633\u062a\u0634\u0641\u0649 \u0648\u0645\u0631\u0643\u0632 \u0628\u0644\u0641\u0648 \u0627\u0644\u0637\u0628\u064a \u0634.\u0645.\u0644.", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "940"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u0644\u0633\u0627\u062f\u0629 \u0633\u0631\u0643\u064a\u0633 \u0635\u0642\u0631 \u0648\u0645\u0634\u0627\u0631\u0643\u0648\u0647", 
+        "Position": "\u0645\u0641\u0648\u0636 \u0645\u0631\u0627\u0642\u0628\u0629", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u0644\u0633\u0627\u062f\u0629 \u0633\u0631\u0643\u064a\u0633 \u0635\u0642\u0631 \u0648\u0645\u0634\u0627\u0631\u0643\u0648\u0647", 
-        "relationship": "\u0645\u0641\u0648\u0636 \u0645\u0631\u0627\u0642\u0628\u0629"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u062f\u064a\u0631 \u0639\u0627\u0645", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u062f\u064a\u0631 \u0639\u0627\u0645"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0646\u0627\u0626\u0628 \u0631\u0626\u064a\u0633", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0646\u0627\u0626\u0628 \u0631\u0626\u064a\u0633"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0631\u0626\u064a\u0633 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0631\u0626\u064a\u0633 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0631\u064a\u0645\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u0631\u064a\u0645\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0631\u0645\u0632\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u0631\u0645\u0632\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0634\u062d\u0627\u062f\u0647 \u0641\u062f\u0639\u0627 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0633\u0627\u0647\u0645", 
         "df_idx": 0, 
-        "n_shares": "10", 
-        "obligor_alien": "\u0634\u062d\u0627\u062f\u0647 \u0641\u062f\u0639\u0627 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0633\u0627\u0647\u0645"
+        "n_shares": "10"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0624\u0633\u0633", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0624\u0633\u0633"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0624\u0633\u0633", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0624\u0633\u0633"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0624\u0633\u0633", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0624\u0633\u0633"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0641\u0648\u0636 \u062a\u0648\u0642\u064a\u0639", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u064a\u0644\u064a \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0641\u0648\u0636 \u062a\u0648\u0642\u064a\u0639"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0645\u0641\u0648\u0636 \u062a\u0648\u0642\u064a\u0639", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0645\u0641\u0648\u0636 \u062a\u0648\u0642\u064a\u0639"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0646\u0627\u064a\u0641 \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u063a\u0633\u0627\u0646 \u0646\u0639\u064a\u0645 \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0631\u064a\u0645\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
+        "Position": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0631\u064a\u0645\u064a \u0627\u064a\u0644\u064a \u0645\u0639\u0644\u0648\u0641", 
-        "relationship": "\u0639\u0636\u0648 \u0645\u062c\u0644\u0633 \u0625\u062f\u0627\u0631\u0629"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
     {
       "entry": {
+        "Name (Arabic)": "\u0627\u0644\u064a\u0627\u0633 \u0637\u0627\u0646\u064a\u0648\u0633 \u0627\u0644\u062d\u0627\u0645\u0648\u0634", 
+        "Position": "\u0645\u062d\u0627\u0645\u064a", 
         "df_idx": 0, 
-        "n_shares": "0", 
-        "obligor_alien": "\u0627\u0644\u064a\u0627\u0633 \u0637\u0627\u0646\u064a\u0648\u0633 \u0627\u0644\u062d\u0627\u0645\u0648\u0634", 
-        "relationship": "\u0645\u062d\u0627\u0645\u064a"
+        "n_shares": "0"
       }, 
       "type": "df_out"
     }, 
@@ -195,28 +195,28 @@
   "items_dropped": [], 
   "spider_name": "cr_justice_gov_lb_single", 
   "stats": {
-    "downloader/request_bytes": 2454, 
+    "downloader/request_bytes": 2442, 
     "downloader/request_count": 6, 
     "downloader/request_method_count/GET": 5, 
     "downloader/request_method_count/POST": 1, 
-    "downloader/response_bytes": 50273, 
+    "downloader/response_bytes": 50284, 
     "downloader/response_count": 6, 
     "downloader/response_status_count/200": 4, 
     "downloader/response_status_count/404": 2, 
     "finish_reason": "finished", 
-    "finish_time": "2018-05-29 07:14:50", 
+    "finish_time": "2018-05-29 07:30:38", 
     "item_scraped_count": 21, 
     "log_count/DEBUG": 27, 
     "log_count/INFO": 15, 
-    "memusage/max": 100102144, 
-    "memusage/startup": 100102144, 
+    "memusage/max": 99663872, 
+    "memusage/startup": 99663872, 
     "request_depth_max": 3, 
     "response_received_count": 6, 
     "scheduler/dequeued": 4, 
     "scheduler/dequeued/memory": 4, 
     "scheduler/enqueued": 4, 
     "scheduler/enqueued/memory": 4, 
-    "start_time": "2018-05-29 07:14:47"
+    "start_time": "2018-05-29 07:30:35"
   }, 
   "status": "ok"
 }
