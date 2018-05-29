@@ -275,10 +275,11 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
 
     for quote in qs_set:
-      q2 = quote.xpath('td[1]/span/text()').extract()
-      if len(q2)==0: continue
-      q2=q2[0]
-      q3 = quote.xpath('td[3]/span/text()').extract_first()
+      name_ar = quote.xpath('td[1]/span/text()').extract()
+      if len(name_ar)==0: continue
+      name_ar=name_ar[0]
+      relationship = quote.xpath('td[3]/span/text()').extract_first()
+      n_shares = quote.xpath('td[4]/span/text()').extract_first()
 
       # check nothing went wrong 
       idx = response.meta['df_idx']
@@ -296,8 +297,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       # Check similar note on df_in for scrapyrt
       row_out = {
         'df_idx': idx,
-        'obligor_alien': q2,
-        'relationship': q3,
+        'obligor_alien': name_ar,
+        'relationship': relationship,
+        'n_shares': n_shares,
       }
       yield {'type': 'df_out', 'entry': row_out}
 
