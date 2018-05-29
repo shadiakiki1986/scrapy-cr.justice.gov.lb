@@ -308,8 +308,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
       # Check similar note on df_in for scrapyrt
       row_out = {
         'df_idx': idx,
-        'obligor_alien': name_ar,
-        'relationship': relationship,
+        'Name (Arabic)': name_ar,
+        'Position': relationship,
         'n_shares': n_shares,
       }
       yield {'type': 'df_out', 'entry': row_out}

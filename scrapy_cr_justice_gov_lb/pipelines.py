@@ -85,7 +85,7 @@ class ScrapyCrJusticeGovLbPipeline(object):
       if os.getenv('GOOGLE_APPLICATION_CREDENTIALS', None) is not None:
         translate_client = translate.Client()
         get_trans = lambda text: wrap_translate(translate_client, text)
-        self.df_out['name_en'] = self.df_out['obligor_alien'].apply(get_trans)
+        self.df_out['Name (English)'] = self.df_out['Name (Arabic)'].apply(get_trans)
         
       # print
       print('input')
