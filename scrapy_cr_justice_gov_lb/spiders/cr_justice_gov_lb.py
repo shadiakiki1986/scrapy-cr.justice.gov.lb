@@ -22,6 +22,7 @@ def preprocess_df_in(df_in):
     df_in['status'] = 'Initialized'
     df_in['details_url'] = ''
     df_in['df_idx'] = df_in.index.values
+    df_in['business_description'] = ''
     return df_in
     
 MAX_PAGES = 10 # 10 pages = 100 results at 10 results per page
@@ -274,6 +275,16 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     self.logger.info(msg)
     self.df_in.loc[response.meta['df_idx'], 'status'] = msg
 
+    # save paragraph dsecribing the business .. sometimes it contains names of signatories
+    # xpath below copied from firefox by
+    # 1. Using "pick an element" button from web console
+    # 2. clicking on the element in the page
+    # 3. Right-click on the highlighted html in the console
+    # 4. select "copy / xpath"
+    business_description = response.xpath('//*[@id="DataList1_Label12_0"]/text()').extract_first()
+    self.df_in.loc[response.meta['df_idx'], 'business_description'] = business_description
+
+    # iterate over table of shareholders/signatories/etc.
     for quote in qs_set:
       name_ar = quote.xpath('td[1]/span/text()').extract()
       if len(name_ar)==0: continue

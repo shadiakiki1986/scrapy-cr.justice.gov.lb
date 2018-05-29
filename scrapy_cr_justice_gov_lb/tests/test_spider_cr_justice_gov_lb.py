@@ -120,20 +120,29 @@ class TestSpiderCrJusticeGovLbCsv(BetamaxTestCase):
     response_2 = self.session.get(request_2.url)
     response_2b = convert_response_from_requests_scrapy(response_2, request_2)
     
-    actual = list(self.spider.after_result(response_2b))
-    actual = [x['entry'] for x in actual if x['type']=='df_out']
-    self.assertEqual(20, len(actual))
-    actual = pd.DataFrame(actual)
+    actual_out = list(self.spider.after_result(response_2b))
+    actual_out = [x['entry'] for x in actual_out if x['type']=='df_out']
+    self.assertEqual(20, len(actual_out))
+    actual_out = pd.DataFrame(actual_out)
 
     df_out = os.path.join(BASE_DIR, 'tests/fixtures/df_out_singlepage_multiresult.pkl')
     # uncomment the below to update the fixture
-    # actual.to_pickle(df_out)
-    
-    expected = pd.read_pickle(df_out)
-    #print('columns expected vs actual', expected.columns, actual.columns)
-    #print('expected', expected)
-    #print('actual', actual)
-    pd.testing.assert_frame_equal(actual, expected)
+    # actual_out.to_pickle(df_out)
+   
+    expected_out = pd.read_pickle(df_out)
+    #print('columns expected_out vs actual_out', expected_out.columns, actual_out.columns)
+    #print('expected_out', expected_out)
+    #print('actual_out', actual_out)
+    pd.testing.assert_frame_equal(actual_out, expected_out)
+
+    # same for df_in
+    actual_in = self.spider.df_in
+    self.assertNotEqual('', actual_in.loc[0,'business_description'])
+
+    df_in = os.path.join(BASE_DIR, 'tests/fixtures/df_in_singlepage_multiresult.pkl')
+    # actual_in.to_pickle(df_in)
+    expected_in = pd.read_pickle(df_in)
+    pd.testing.assert_frame_equal(actual_in, expected_in)
 
 
 class TestSpiderCrJusticeGovLbSingle(BetamaxTestCase):

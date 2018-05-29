@@ -87,11 +87,16 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
-Version 0.1.1? (2018-05-28?)
+Version 0.1.2? (2018-06-??)
+* ...
+
+
+Version 0.1.1 (2018-05-28)
 * bug fix for spider=None passed
 * add `pipeline.merge_in_out` for convenience
 * wrap yielded items from spider into `{'type': '...', 'entry': '...'}` to collect `df_in` and `df_out` in the pipeline
-* add `n_shares`
+* add `n_shares` to `df_out`
+* save `business_description` in `spider.df_in`
 
 
 Version 0.1.0 (2018-05-28)
