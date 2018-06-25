@@ -94,3 +94,28 @@ class ScrapyCrJusticeGovLbPipeline(object):
       print('output')
       print(self.df_out)
 
+
+
+class RawHtmlPipeline(object):
+    """
+    Pipeline which spits out the raw html of each company into a zip archive of html files
+    """
+  
+    def close_spider(self, spider):
+      if spider is None:
+        return
+
+      # get temp filename for zip file
+      import tempfile
+      temp_name = next(tempfile._get_candidate_names())
+      defult_tmp_dir = tempfile._get_default_tempdir()
+      fnz = os.path.join(defult_tmp_dir, temp_name)
+      fnz = "%s.zip"%fnz
+
+      # save all raw html into zip
+      with ZipFile(fnz, 'a') as zf:
+        for reg_num, html_i in spider.raw_html.items():
+          zf.writestr("%s.html"%reg_num, html_i)
+
+
+      print("zip archive of raw html: %s"%fnz)

@@ -96,6 +96,7 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 Version 0.1.2? (2018-06-??)
 * rename some fields as per Nada
+* add "raw html pipeline" which saves a zip archive of html files per company
 
 
 Version 0.1.1 (2018-05-28)

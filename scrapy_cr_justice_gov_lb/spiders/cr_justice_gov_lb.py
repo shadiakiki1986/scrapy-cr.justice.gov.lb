@@ -50,6 +50,11 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
     # save and return
     self.df_in = df_in
+
+    # saving the intermediate raw html per company
+    self.raw_html = {}
+
+    # return
     return super().__init__(*args, **kwargs)
 
   def parse(self, response):
@@ -270,6 +275,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     return request
 
   def after_result(self, response):
+    # append to class member, for saving to zip file later
+    self.raw_html[response.meta['register_number']] = response
+
+    # get number of aliens
     qs_set = response.xpath('//table[@id="Relations_ListView_itemPlaceholderContainer"]/tr')
     msg = "for %s got %s aliens"%(response.meta['register_number'], len(qs_set))
     self.logger.info(msg)
