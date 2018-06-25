@@ -45,8 +45,10 @@ class ScrapyCrJusticeGovLbPipeline(object):
       item2 = dict(item)
       if item2['type'] == 'df_out':
         self.df_out = self.df_out.append(item2['entry'], ignore_index=True)
-      else:
+      elif item2['type'] == 'df_in':
         self.df_in = self.df_in.append(item2['entry'], ignore_index=True)
+      else:
+        pass # do nothing, e.g. raw html
 
       return item
 

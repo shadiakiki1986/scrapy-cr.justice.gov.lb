@@ -278,6 +278,15 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     # append to class member, for saving to zip file later
     self.raw_html[response.meta['register_number']] = response
 
+    # yield raw html for scrapyrt too
+    # TODO deprecate raw_html above and its pipeline?
+    yield {
+      'type': 'raw_html',
+      'df_idx': idx,
+      'register_number': response.meta['register_number'],
+      'html': response.body,
+    }
+
     # get number of aliens
     qs_set = response.xpath('//table[@id="Relations_ListView_itemPlaceholderContainer"]/tr')
     msg = "for %s got %s aliens"%(response.meta['register_number'], len(qs_set))
