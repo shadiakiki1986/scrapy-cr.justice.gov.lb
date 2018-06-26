@@ -280,12 +280,22 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 
     # yield raw html for scrapyrt too
     # TODO deprecate raw_html above and its pipeline?
-    yield {
+    out = {
       'type': 'raw_html',
-      'df_idx': idx,
+      'df_idx': response.meta['df_idx'],
       'register_number': response.meta['register_number'],
-      'html': response.body,
+      'html': response.body.decode('utf-8'),
     }
+
+    try:
+      json.dumps(out)
+    except Exception as error:
+      print('dict is not scrapyrt-friendly. It could crash it')
+      raise
+
+    # now that we know this can be json-serialized, yield
+    # (check similar json-testing above)
+    yield out
 
     # get number of aliens
     qs_set = response.xpath('//table[@id="Relations_ListView_itemPlaceholderContainer"]/tr')
