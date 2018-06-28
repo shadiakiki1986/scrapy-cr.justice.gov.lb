@@ -94,6 +94,10 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
+Version 0.1.3 (2018-06-27)
+* add constructor agrument "check_json_serializable" to spider constructor
+
+
 Version 0.1.2 (2018-06-26)
 * rename some fields as per Nada
 * add "raw html pipeline" which saves a zip archive of html files per company

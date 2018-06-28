@@ -38,7 +38,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   #start_urls = []
   start_urls = ['http://cr.justice.gov.lb/search/res_list.aspx']
 
-  def __init__(self, df_in:pd.DataFrame, *args, **kwargs):
+  def __init__(self, df_in:pd.DataFrame, check_json_serializable=True, *args, **kwargs):
+  """
+  check_json_serializable - whether or not to check that output is json-serializable (for scrapyrt friendliness)
+  """
     validate_df_in(df_in)
     df_in = preprocess_df_in(df_in)
 #    df_in = df_in[df_in['register_number']=='5792'] # FIXME
@@ -47,6 +50,8 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
 #    df_in = df_in[df_in['register_number']=='2471'] # FIXME
     print("input df")
     print(df_in)
+
+    self.check_json_serializable = check_json_serializable
 
     # save and return
     self.df_in = df_in
@@ -89,11 +94,13 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     out['entry']['df_idx'] = int(out['entry']['df_idx'])
 
     # test that scrapyrt can serialize to json
-    try:
-      json.dumps(out)
-    except Exception as error:
-      print('dict is not scrapyrt-friendly. It could crash it')
-      raise
+    if self.check_json_serializable:
+      try:
+        json.dumps(out)
+      except Exception as error:
+        print('dict is not scrapyrt-friendly. It could crash it')
+        raise
+
     return out
 
   def after_search(self, response):
