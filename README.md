@@ -94,7 +94,7 @@ so I resort to the [Google Cloud Translation API](https://cloud.google.com/trans
 
 ## Changelog
 
-Version 0.1.2? (2018-06-??)
+Version 0.1.2 (2018-06-26)
 * rename some fields as per Nada
 * add "raw html pipeline" which saves a zip archive of html files per company
   * also "yield" the raw html for easy integration with scrapyrt
