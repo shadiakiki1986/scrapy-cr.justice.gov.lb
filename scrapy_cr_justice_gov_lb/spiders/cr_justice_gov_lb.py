@@ -39,9 +39,9 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
   start_urls = ['http://cr.justice.gov.lb/search/res_list.aspx']
 
   def __init__(self, df_in:pd.DataFrame, check_json_serializable=True, *args, **kwargs):
-  """
-  check_json_serializable - whether or not to check that output is json-serializable (for scrapyrt friendliness)
-  """
+    """
+    check_json_serializable - whether or not to check that output is json-serializable (for scrapyrt friendliness)
+    """
     validate_df_in(df_in)
     df_in = preprocess_df_in(df_in)
 #    df_in = df_in[df_in['register_number']=='5792'] # FIXME
