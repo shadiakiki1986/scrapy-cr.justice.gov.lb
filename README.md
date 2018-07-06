@@ -98,8 +98,8 @@ To make a new release:
 - add notes to Changelog in README.md
 - bump version in setup.py
 - git commit and push
-- git tag new version
-- git push new version
+- git tag "new version"
+- git push origin "new version"
 
 
 ## Changelog
