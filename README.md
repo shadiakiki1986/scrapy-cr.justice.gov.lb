@@ -92,7 +92,21 @@ e.g. labib instead of lbyb
 so I resort to the [Google Cloud Translation API](https://cloud.google.com/translate/docs/translating-text#translate-translate-text-python)
 
 
+## Dev notes
+
+To make a new release:
+- add notes to Changelog in README.md
+- bump version in setup.py
+- git commit and push
+- git tag new version
+- git push new version
+
+
 ## Changelog
+
+Version 0.1.4 (2018-07-06)
+* add `business_name_en` and `business_name_ar` of the company to the `df_in`
+
 
 Version 0.1.3 (2018-06-27)
 * add constructor agrument "check_json_serializable" to spider constructor

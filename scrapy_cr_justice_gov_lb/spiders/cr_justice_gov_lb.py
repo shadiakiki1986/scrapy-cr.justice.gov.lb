@@ -319,6 +319,10 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     business_description = response.xpath('//*[@id="DataList1_Label12_0"]/text()').extract_first()
     self.df_in.loc[response.meta['df_idx'], 'business_description'] = business_description
 
+    # saving the business name in arabic and latin characters
+    self.df_in.loc[response.meta['df_idx'], 'business_name_ar'] = response.xpath('//span[@id="DataList1_Label2_0"]/text()').extract_first()
+    self.df_in.loc[response.meta['df_idx'], 'business_name_en'] = response.xpath('//span[@id="DataList1_Label3_0"]/text()').extract_first()
+
     # iterate over table of shareholders/signatories/etc.
     for quote in qs_set:
       name_ar = quote.xpath('td[1]/span/text()').extract()
