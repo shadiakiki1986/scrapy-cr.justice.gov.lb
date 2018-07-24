@@ -104,6 +104,10 @@ To make a new release:
 
 ## Changelog
 
+Version 0.1.5 (2018-07-??)
+* add `business_name_ar` to the raw html entries
+
+
 Version 0.1.4 (2018-07-06)
 * add `business_name_en` and `business_name_ar` of the company to the `df_in`
 

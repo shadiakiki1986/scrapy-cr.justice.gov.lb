@@ -285,25 +285,6 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     # append to class member, for saving to zip file later
     self.raw_html[response.meta['register_number']] = response
 
-    # yield raw html for scrapyrt too
-    # TODO deprecate raw_html above and its pipeline?
-    out = {
-      'type': 'raw_html',
-      'df_idx': response.meta['df_idx'],
-      'register_number': response.meta['register_number'],
-      'html': response.body.decode('utf-8'),
-    }
-
-    try:
-      json.dumps(out)
-    except Exception as error:
-      print('dict is not scrapyrt-friendly. It could crash it')
-      raise
-
-    # now that we know this can be json-serialized, yield
-    # (check similar json-testing above)
-    yield out
-
     # get number of aliens
     qs_set = response.xpath('//table[@id="Relations_ListView_itemPlaceholderContainer"]/tr')
     msg = "for %s got %s aliens"%(response.meta['register_number'], len(qs_set))
@@ -322,6 +303,26 @@ class ScrapyCrJusticeGovLbSpiderBase(scrapy.Spider):
     # saving the business name in arabic and latin characters
     self.df_in.loc[response.meta['df_idx'], 'business_name_ar'] = response.xpath('//span[@id="DataList1_Label2_0"]/text()').extract_first()
     self.df_in.loc[response.meta['df_idx'], 'business_name_en'] = response.xpath('//span[@id="DataList1_Label3_0"]/text()').extract_first()
+
+    # yield raw html for scrapyrt too
+    # TODO deprecate raw_html above and its pipeline?
+    out = {
+      'type': 'raw_html',
+      'df_idx': response.meta['df_idx'],
+      'register_number': response.meta['register_number'],
+      'business_name_ar': self.df_in.loc[response.meta['df_idx'], 'business_name_ar'],
+      'html': response.body.decode('utf-8'),
+    }
+
+    try:
+      json.dumps(out)
+    except Exception as error:
+      print('dict is not scrapyrt-friendly. It could crash it')
+      raise
+
+    # now that we know this can be json-serialized, yield
+    # (check similar json-testing above)
+    yield out
 
     # iterate over table of shareholders/signatories/etc.
     for quote in qs_set:
